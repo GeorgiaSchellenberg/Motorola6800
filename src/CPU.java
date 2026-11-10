@@ -38,16 +38,15 @@ public class CPU {
 
     //add accumulator B to accumulator A
     public void ABA(){
-        int res = accumulatorA | accumulatorB;
+        int res = accumulatorA + accumulatorB;
         // trim the result
         res = res & 0xFF;
         //check HalfCarry
-        if (((accumulatorA & 0x04) & (accumulatorB & 0x04)) != 0){
+        if (((accumulatorA & 0x08) & (accumulatorB & 0x08)) != 0){
             ccr.setHalfCarry(true);
-        }
-        else if (((accumulatorB & 0x04) & (res & 0x04)) != 0){
+        } else if (((accumulatorB & 0x08) & (res & 0x08)) != 0){
             ccr.setHalfCarry(true);
-        } else if (((accumulatorA & 0x04) & (res & 0x04)) != 0){
+        } else if (((accumulatorA & 0x08) & (res & 0x08)) != 0){
             ccr.setHalfCarry(true);
         } else {
             ccr.setHalfCarry(false);
@@ -57,7 +56,9 @@ public class CPU {
         //check Zero
         ccr.setZero((res & 0xFF) == 0);
         //check Overflow
+        //if (((accumulatorA & 0x08) == 1) & ((accumulatorB & 0x08) == 1) & ((res & 0x08) == 0){
 
+        //}
         //chek Carry
 
     }
