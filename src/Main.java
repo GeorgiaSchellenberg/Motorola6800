@@ -4,7 +4,7 @@ public class Main {
         c.memory.write(0, (byte)3);
         c.accumulatorA = 14;
         System.out.println(c.accumulatorA);
-        c.ANDA_imm();
+        c.ANDA_IMM();
         System.out.println(c.accumulatorA);
 
 
