@@ -24,6 +24,9 @@ public class CPU {
         memory = new MemoryManager();
     }
 
+    //method for loading program into memory
+
+
     //fetch - grabs next byte from memory and increments PC
     public int fetch() {
         // read instruction from memory
@@ -794,8 +797,12 @@ public class CPU {
         ccr.setOverflow(false);
     }
     //extended
-    public void LDS_EXT(){}
+    public void LDS_EXT(){
+        int upper = 0;
+    }
     //indexed
     public void LDS_IND(){}
+    //Load Index Register
+
 
 }

@@ -9,5 +9,7 @@ public class Main {
         System.out.println(c.accumulatorA);
 
         System.out.println("PC: " + c.programCounter);
+
+
     }
 }
