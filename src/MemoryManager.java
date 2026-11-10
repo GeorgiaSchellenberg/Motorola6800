@@ -6,7 +6,8 @@ public class MemoryManager {
         this.memory = new byte[65536];
     }
 
-    public int readAddress(int address){
+
+    private int readAddress(int address){
         // 0 = RAM
         // 1 = ROM
         // 2 = PIA
@@ -25,31 +26,57 @@ public class MemoryManager {
 
     // read
     public int read(int address){
+        // check if address is no longer than 2 ^ 16
         int addressSpace = readAddress(address);
-        byte data;
+        // defaul to dummy value?
+        int data = 0xFF;
         if (addressSpace == 0){
             // RAM
             if (address <= 0x007F){
-                data = memory[address];
-            } else {
-                // return dummy value
-                return 0x00FF;
+                // only read if in RAM's address range
+                data = memory[address] & 0xFF;
             }
         } else if (addressSpace == 1){
             // ROM
-            data = memory[address];
+            data = memory[address] & 0xFF;
         } else if (addressSpace == 2){
             //PIA
-        } else if (addressSpace == 3){
+            data = readPIA(address);
+
+        } else if (addressSpace == 3) {
             //ACIA
+            data = readACIA(address);
+
         }
-        return (int) data;
+        return data;
     }
 
 
 
-    // write to ram
+    // write to ram or io
+    public void write (int address, byte data){
+        int addressSpace = readAddress(address);
 
-    //
+        if (addressSpace == 1){
+            // WRONG CANNOT WRITE TO ROM
 
+        }
+
+        if (addressSpace == 0){
+            // RAM
+            memory[address] = data;
+        } else if (addressSpace == 2){
+            // PIA
+        } else if (addressSpace == 3){
+            // ACIA
+        }
+    }
+
+    private int readPIA(int address){
+        return 0;
+    }
+
+    private int readACIA(int address){
+        return 0;
+    }
 }
