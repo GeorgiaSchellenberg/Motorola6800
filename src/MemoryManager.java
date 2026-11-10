@@ -21,34 +21,36 @@ public class MemoryManager {
         } else if (address >= 0x4008 && address <= 0x4009){
             return 3;
         }
-        return 0;
+        // un-mappable!
+        return -1;
     }
 
     // read
     public int read(int address){
         // check if address is no longer than 2 ^ 16
-        int addressSpace = readAddress(address);
-        // defaul to dummy value?
-        int data = 0xFF;
+        int addressSpace = readAddress(address & 0xFFFF);
+
         if (addressSpace == 0){
             // RAM
             if (address <= 0x007F){
                 // only read if in RAM's address range
-                data = memory[address] & 0xFF;
+                return memory[address] & 0xFF;
+            } else {
+                // return dummy value if not in the range of ram
+                return 0xFF;
             }
         } else if (addressSpace == 1){
             // ROM
-            data = memory[address] & 0xFF;
+            return memory[address] & 0xFF;
         } else if (addressSpace == 2){
             //PIA
-            data = readPIA(address);
-
+            return readPIA(address);
         } else if (addressSpace == 3) {
             //ACIA
-            data = readACIA(address);
-
+            return readACIA(address);
+        } else {
+            return 0xFF;
         }
-        return data;
     }
 
 
@@ -59,7 +61,7 @@ public class MemoryManager {
 
         if (addressSpace == 1){
             // WRONG CANNOT WRITE TO ROM
-
+            System.out.println("No can do! Don't write to ROM!");
         }
 
         if (addressSpace == 0){
@@ -78,5 +80,13 @@ public class MemoryManager {
 
     private int readACIA(int address){
         return 0;
+    }
+
+    private void writePIA(int address, byte data){
+
+    }
+
+    private void readACIA(int address, byte data){
+
     }
 }
