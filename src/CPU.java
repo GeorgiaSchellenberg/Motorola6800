@@ -653,7 +653,149 @@ public class CPU {
     //Increment Index Register
     public void INX(){
         indexRegister = indexRegister + 1;
+
         // update Z if all 16 bits are 0
+        if (indexRegister == 0){
+            ccr.setZero(true);
+        } else {
+            ccr.setZero(false);
+        }
     }
+    //Jump
+    //extended
+    public void JMP_EXT(){
+        int upperAddress = fetch();
+        int lowerAddress = fetch();
+        //combine upper and lower addresses
+        int address = (upperAddress << 8) | lowerAddress;
+
+        programCounter = address;
+
+    }
+    //indexed
+    public void JMP_IND(){
+        int address = fetch() + indexRegister;
+
+        programCounter = address;
+    }
+    //Jump to Subroutine
+    public void JSR(){
+
+    }
+    //Load Accumulator
+    //accumulator A
+    //immediate
+    public void LDA_IMM() {
+        //loads memory into accumulator
+        accumulatorA = fetch();
+
+        ccr.setNegative((accumulatorA & 0x80) != 0);
+        ccr.setZero((accumulatorA & 0xFF) == 0);
+        ccr.setOverflow(false);
+    }
+    //direct
+    public void LDA_DIR(){
+        int address = fetch();
+        accumulatorA = memory.read(address);
+
+        ccr.setNegative((accumulatorA & 0x80) != 0);
+        ccr.setZero((accumulatorA & 0xFF) == 0);
+        ccr.setOverflow(false);
+    }
+    //extended
+    public void LDA_EXT(){
+        int upperAddress = fetch();
+        int lowerAddress = fetch();
+
+        int address = (upperAddress << 8) | lowerAddress;
+
+        accumulatorA = memory.read(address);
+
+        ccr.setNegative((accumulatorA & 0x80) != 0);
+        ccr.setZero((accumulatorA & 0xFF) == 0);
+        ccr.setOverflow(false);
+    }
+    //index
+    public void LDA_IND(){
+        int address = fetch() + indexRegister;
+
+        accumulatorA = memory.read(address);
+
+        ccr.setNegative((accumulatorA & 0x80) != 0);
+        ccr.setZero((accumulatorA & 0xFF) == 0);
+        ccr.setOverflow(false);
+    }
+    //accumulator B
+    //immediate
+    public void LDB_IMM() {
+        //loads memory into accumulator
+        accumulatorB = fetch();
+
+        ccr.setNegative((accumulatorB & 0x80) != 0);
+        ccr.setZero((accumulatorB & 0xFF) == 0);
+        ccr.setOverflow(false);
+    }
+    //direct
+    public void LDB_DIR(){
+        int address = fetch();
+        accumulatorA = memory.read(address);
+
+        ccr.setNegative((accumulatorB & 0x80) != 0);
+        ccr.setZero((accumulatorB & 0xFF) == 0);
+        ccr.setOverflow(false);
+    }
+    //extended
+    public void LDB_EXT(){
+        int upperAddress = fetch();
+        int lowerAddress = fetch();
+
+        int address = (upperAddress << 8) | lowerAddress;
+
+        accumulatorA = memory.read(address);
+
+        ccr.setNegative((accumulatorB & 0x80) != 0);
+        ccr.setZero((accumulatorB & 0xFF) == 0);
+        ccr.setOverflow(false);
+    }
+    //index
+    public void LDB_IND(){
+        int address = fetch() + indexRegister;
+
+        accumulatorA = memory.read(address);
+
+        ccr.setNegative((accumulatorB & 0x80) != 0);
+        ccr.setZero((accumulatorB & 0xFF) == 0);
+        ccr.setOverflow(false);
+    }
+    //Load Stack Pointer
+    //immediate
+    public void LDS_IMM(){
+        int sph = fetch();
+        int spl = fetch();
+
+        stackPointer = (sph << 8) | spl;
+
+        ccr.setNegative((stackPointer & 0x80) != 0);
+        ccr.setZero((stackPointer & 0xFF) == 0);
+        ccr.setOverflow(false);
+    }
+    //direct
+    public void LDS_DIR(){
+        int upperAddress = fetch();
+        // ?? or fetch?
+        int lowerAddress = memory.read(upperAddress + 1);
+
+        int address = (upperAddress << 8) | lowerAddress;
+
+        stackPointer = memory.read(address);
+
+        ccr.setNegative((stackPointer & 0x80) != 0);
+        ccr.setZero((stackPointer & 0xFF) == 0);
+        ccr.setOverflow(false);
+    }
+    //extended
+    public void LDS_EXT(){}
+    //indexed
+    public void LDS_IND(){}
 
 }
