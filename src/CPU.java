@@ -804,5 +804,4 @@ public class CPU {
     public void LDS_IND(){}
     //Load Index Register
 
-
 }
