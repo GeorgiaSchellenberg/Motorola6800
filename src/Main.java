@@ -1,6 +1,5 @@
 public class Main {
     public static void main(String[] args){
-        System.out.println((new byte[8]).toString());
         // NOTE: the quirk with reading bytes in java :)
         Byte a = (byte) 254;
         int b = (int) a & 0xFF;
@@ -11,6 +10,11 @@ public class Main {
         int tooBig = 0x11170;
         int adjusted = tooBig & c;
         System.out.print (tooBig + " -> " + adjusted);
+
+        int d = 1;
+
+
+        System.out.println(d);
 
     }
 }

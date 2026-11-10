@@ -172,5 +172,13 @@ public class CPU {
         // reset overflow
         ccr.setOverflow(false);
     }
+    //Arithmetic Shift Left
+    //accumulator A
+    public void ASLA(){
+        int res = accumulatorA << 1;
+    }
+    public void ASLB(){}
+    public void ASLA_EXT(){}
+    public void ASLA_IND(){}
 
 }
