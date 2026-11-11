@@ -88,9 +88,223 @@ public class CPU {
             //:::::::::::::: Branch if Higher
             case 0x22: BHI();break;
             //:::::::::::::: Bit Test
-
-
-
+            case 0x85: BITA_IMM();break;
+            case 0x95: BITA_DIR();break;
+            case 0xB5: BITA_EXT();break;
+            case 0xA5: BITA_IND();break;
+            case 0xC5: BITB_IMM();break;
+            case 0xD5: BITB_DIR();break;
+            case 0xF5: BITB_EXT();break;
+            case 0xE5: BITB_IND();break;
+            //:::::::::::::: Branch is Less than or Equal to Zero
+            case 0x2F: BLE();break;
+            //:::::::::::::: Branch if Lower or Same
+            case 0x23: BLS();break;
+            //:::::::::::::: Branch if Less than Zero
+            case 0x2D: BLT();break;
+            //:::::::::::::: Branch if Minus
+            case 0x2B: BMI();break;
+            //:::::::::::::: Branch if Not Equal
+            case 0x26: BNE();break;
+            //:::::::::::::: Branch if Plus
+            case 0x2A: BPL();break;
+            //:::::::::::::: Branch Always
+            case 0x20: BRA();break;
+            //:::::::::::::: Branch to Subroutine
+            case 0x8D: BSR();break;
+            //:::::::::::::: Branch if Overflow clear
+            case 0x28: BVC();break;
+            //:::::::::::::: Branch if Overflow set
+            case 0x29: BVS();break;
+            //:::::::::::::: Compare Accumulators
+            case 0x11: CBA();break;
+            //:::::::::::::: Clear Carry
+            case 0x0C: CLC();break;
+            //:::::::::::::: Clear Interrupt Mask
+            case 0x0E: CLI();break;
+            //:::::::::::::: Clear
+            case 0x4F: CLRA();break;
+            case 0x5F: CLRB();break;
+            case 0x7F: CLR_EXT();break;
+            case 0x6F: CLR_IND();break;
+            //:::::::::::::: Clear Two's Complement Overflow Bit
+            case 0x0A: CLV();break;
+            //:::::::::::::: Compare
+            case 0x81: CMPA_IMM();break;
+            case 0x91: CMPA_DIR();break;
+            case 0xB1: CMPA_EXT();break;
+            case 0xA1: CMPA_IND();break;
+            case 0xC1: CMPB_IMM();break;
+            case 0xD1: CMPB_DIR();break;
+            case 0xF1: CMPB_EXT();break;
+            case 0xE1: CMPB_IND();break;
+            //:::::::::::::: Complement
+            case 0x43: COMA();break;
+            case 0x53: COMB();break;
+            case 0x73: COM_EXT();break;
+            case 0x63: COM_IND();break;
+            //:::::::::::::: Compare Index Register
+            case 0x8C: CPX_IMM();break;
+            case 0x9C: CPX_DIR();break;
+            case 0xBC: CPX_EXT();break;
+            case 0xAC: CPX_IND();break;
+            //:::::::::::::: Decimal Adjust ACCA
+            case 0x19: DAA();break;
+            //:::::::::::::: Decrement
+            case 0x4A: DECA();break;
+            case 0x5A: DECB();break;
+            case 0x7A: DEC_EXT();break;
+            case 0x6A: DEC_IND();break;
+            //:::::::::::::: Decrement Stack Pointer
+            case 0x34: DES();break;
+            //:::::::::::::: Decrement Index Register
+            case 0x09: DEX();break;
+            //:::::::::::::: Exclusive OR
+            case 0x88: EORA_IMM();break;
+            case 0x98: EORA_DIR();break;
+            case 0xB8: EORA_EXT();break;
+            case 0xA8: EORA_IND();break;
+            case 0xC8: EORB_IMM();break;
+            case 0xD8: EORB_DIR();break;
+            case 0xF8: EORB_EXT();break;
+            case 0xE8: EORB_IND();break;
+            //:::::::::::::: Increment
+            case 0x4C: INCA();break;
+            case 0x5C: INCB();break;
+            case 0x7C: INC_EXT();break;
+            case 0x6C: INC_IND();break;
+            //:::::::::::::: Increment Stack Pointer
+            case 0x31: INS();break;
+            //:::::::::::::: Increment Index Register
+            case 0x08: INX();break;
+            //:::::::::::::: Jump
+            case 0x7E: JMP_EXT();break;
+            case 0x6E: JMP_IND();break;
+            //:::::::::::::: Jump to Subroutine
+            case 0xBD: JSR_EXT();break;
+            case 0xAD: JSR_IND();break;
+            //:::::::::::::: Load Accumulator
+            case 0x86: LDAA_IMM();break;
+            case 0x96: LDAA_DIR();break;
+            case 0xB6: LDAA_EXT();break;
+            case 0xA6: LDAA_IND();break;
+            case 0xC6: LDAB_IMM();break;
+            case 0xD6: LDAB_DIR();break;
+            case 0xF6: LDAB_EXT();break;
+            case 0xE6: LDAB_IND();break;
+            //:::::::::::::: Load Stack Pointer
+            case 0x8E: LDS_IMM();break;
+            case 0x9E: LDS_DIR();break;
+            case 0xBE: LDS_EXT();break;
+            case 0xAE: LDS_IND();break;
+            //:::::::::::::: Load Index Register
+            case 0xCE: LDX_IMM();break;
+            case 0xDE: LDX_DIR();break;
+            case 0xFE: LDX_EXT();break;
+            case 0xEE: LDX_IND();break;
+            //:::::::::::::: Logical Shift Right
+            case 0x44: LSRA();break;
+            case 0x54: LSRB();break;
+            case 0x74: LSR_EXT();break;
+            case 0x64: LSR_IND();break;
+            //:::::::::::::: Negate
+            case 0x40: NEGA();break;
+            case 0x50: NEGB();break;
+            case 0x70: NEG_EXT();break;
+            case 0x60: NEG_IND();break;
+            //:::::::::::::: No Operation
+            case 0x01: NEG();break;
+            //:::::::::::::: Inclusive OR
+            case 0x8A: ORAA_IMM();break;
+            case 0x9A: ORAA_DIR();break;
+            case 0xBA: ORAA_EXT();break;
+            case 0xAA: ORAA_IND();break;
+            case 0xCA: ORAB_IMM();break;
+            case 0xDA: ORAB_DIR();break;
+            case 0xFA: ORAB_EXT();break;
+            case 0xEA: ORAB_IND();break;
+            //:::::::::::::: Push Data Onto Stack
+            case 0x36: PSHA();break;
+            case 0x37: PSHB();break;
+            //:::::::::::::: Pull Data from Stack
+            case 0x32: PULA();break;
+            case 0x33: PULAB();break;
+            //:::::::::::::: Rotate Left
+            case 0x49: ROLA();break;
+            case 0x59: ROLB();break;
+            case 0x79: ROL_EXT();break;
+            case 0x69: ROL_IND();break;
+            //:::::::::::::: Rotate Right
+            case 0x46: RORA();break;
+            case 0x56: RORB();break;
+            case 0x76: ROR_EXT();break;
+            case 0x66: ROR_IND();break;
+            //:::::::::::::: Return from Interrupt
+            case 0x3B: RTI();break;
+            //:::::::::::::: Return from Subroutine
+            case 0x39: RTS();break;
+            //:::::::::::::: Subtract Accumulators
+            case 0x10: SBA();break;
+            //:::::::::::::: Subtract with Carry
+            case 0x82: SBCA_IMM();break;
+            case 0x92: SBCA_DIR();break;
+            case 0xB2: SBCA_EXT();break;
+            case 0xA2: SBCA_IND();break;
+            case 0xC2: SBCB_IMM();break;
+            case 0xD2: SBCB_DIR();break;
+            case 0xF2: SBCB_EXT();break;
+            case 0xE2: SBCB_IND();break;
+            //:::::::::::::: Set Carry
+            case 0x0D: SEC();break;
+            //:::::::::::::: Set Interrupt Mask
+            case 0x0F: SEI();break;
+            //:::::::::::::: Set Two's Complement Overflow Bit
+            case 0x0B: SEV();break;
+            //:::::::::::::: Store Accumulator
+            case 0x97: STAA_DIR();break;
+            case 0xB7: STAA_EXT();break;
+            case 0xA7: STAA_IND();break;
+            case 0xD7: STAB_DIR();break;
+            case 0xF7: STAB_EXT();break;
+            case 0xE7: STAB_IND();break;
+            //:::::::::::::: Store Stack Pointer
+            case 0x9F: STS_DIR();break;
+            case 0xBF: STS_EXT();break;
+            case 0xAF: STS_IND();break;
+            //:::::::::::::: STX
+            case 0xDF: STX_DIR();break;
+            case 0xFF: STX_EXT();break;
+            case 0xEF: STX_IND();break;
+            //:::::::::::::: Subtract
+            case 0x80: SUBA_IMM();break;
+            case 0x90: SUBA_DIR();break;
+            case 0xB0: SUBA_EXT();break;
+            case 0xA0: SUBA_IND();break;
+            case 0xC0: SUBB_IMM();break;
+            case 0xD0: SUBB_DIR();break;
+            case 0xF0: SUBB_EXT();break;
+            case 0xE0: SUBB_IMD();break;
+            //:::::::::::::: Software Interrupt
+            case 0x3F: SWI();break;
+            //:::::::::::::: Transfer from Accumulator A to Accumulator B
+            case 0x16: TAB();break;
+            //:::::::::::::: Transfer from Accumulator A to Processor CCR
+            case 0x06: TAP();break;
+            //:::::::::::::: Transfer from Accumulator B to Accumulator A
+            case 0x17: TBA();break;
+            //:::::::::::::: Transfer from Processor CCR to Accumulator A
+            case 0x07: TPA();break;
+            //:::::::::::::: Test
+            case 0x4D: TSTA();break;
+            case 0x5D: TSTB();break;
+            case 0x7D: TST_EXT();break;
+            case 0x6D: TST_IND();break;
+            //:::::::::::::: Transfer from Stack Pointer to Index Register
+            case 0x30: TSX();break;
+            //:::::::::::::: transfer from Index Register to Stack Pointer
+            case 0x35: TXS();break;
+            //:::::::::::::: Wait for Interrupt
+            case 0x3E: WAI();break;
         }
     }
 
@@ -799,7 +1013,7 @@ public class CPU {
     //Load Accumulator
     //accumulator A
     //immediate
-    public void LDA_IMM() {
+    public void LDAA_IMM() {
         //loads memory into accumulator
         accumulatorA = fetch();
 
@@ -808,7 +1022,7 @@ public class CPU {
         ccr.setOverflow(false);
     }
     //direct
-    public void LDA_DIR(){
+    public void LDAA_DIR(){
         int address = fetch();
         accumulatorA = memory.read(address);
 
@@ -817,7 +1031,7 @@ public class CPU {
         ccr.setOverflow(false);
     }
     //extended
-    public void LDA_EXT(){
+    public void LDAA_EXT(){
         int upperAddress = fetch();
         int lowerAddress = fetch();
 
@@ -830,7 +1044,7 @@ public class CPU {
         ccr.setOverflow(false);
     }
     //index
-    public void LDA_IND(){
+    public void LDAA_IND(){
         int address = fetch() + indexRegister & 0xFFFF;
 
         accumulatorA = memory.read(address);
@@ -841,7 +1055,7 @@ public class CPU {
     }
     //accumulator B
     //immediate
-    public void LDB_IMM() {
+    public void LDAB_IMM() {
         //loads memory into accumulator
         accumulatorB = fetch();
 
@@ -850,7 +1064,7 @@ public class CPU {
         ccr.setOverflow(false);
     }
     //direct
-    public void LDB_DIR(){
+    public void LDAB_DIR(){
         int address = fetch();
         accumulatorB = memory.read(address);
 
@@ -859,7 +1073,7 @@ public class CPU {
         ccr.setOverflow(false);
     }
     //extended
-    public void LDB_EXT(){
+    public void LDAB_EXT(){
         int upperAddress = fetch();
         int lowerAddress = fetch();
 
@@ -872,7 +1086,7 @@ public class CPU {
         ccr.setOverflow(false);
     }
     //index
-    public void LDB_IND(){
+    public void LDAB_IND(){
         int address = fetch() + indexRegister & 0xFFFF;
 
         accumulatorB = memory.read(address);
