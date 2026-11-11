@@ -620,6 +620,7 @@ public class CPU {
         indexRegister = indexRegister - 1 & 0xFFFF;
 
         // update
+        ccr.setZero(indexRegister == 0);
     }
     //Exclusive OR
     public void EOR(){
@@ -713,7 +714,7 @@ public class CPU {
     }
     //index
     public void LDA_IND(){
-        int address = fetch() + indexRegister;
+        int address = fetch() + indexRegister & 0xFFFF;
 
         accumulatorA = memory.read(address);
 
@@ -755,7 +756,7 @@ public class CPU {
     }
     //index
     public void LDB_IND(){
-        int address = fetch() + indexRegister;
+        int address = fetch() + indexRegister & 0xFFFF;
 
         accumulatorB = memory.read(address);
 
@@ -769,24 +770,23 @@ public class CPU {
         int sph = fetch();
         int spl = fetch();
 
-        stackPointer = (sph << 8) | spl;
+        stackPointer = ((sph << 8) | spl) & 0xFFFF;
 
-        ccr.setNegative((stackPointer & 0x80) != 0);
-        ccr.setZero((stackPointer & 0xFF) == 0);
+        ccr.setNegative((stackPointer & 0x8000) != 0);
+        ccr.setZero(stackPointer == 0);
         ccr.setOverflow(false);
     }
     //direct
     public void LDS_DIR(){
-        int upperAddress = fetch();
-        // ?? or fetch?
-        int lowerAddress = memory.read(upperAddress + 1);
+        int address = fetch();
+        int hb = memory.read(address);
+        int lb = memory.read(address + 1);
 
-        int address = (upperAddress << 8) | lowerAddress;
 
-        stackPointer = memory.read(address);
+        stackPointer = ((hb << 8) | lb) & 0xFFFF;
 
-        ccr.setNegative((stackPointer & 0x80) != 0);
-        ccr.setZero((stackPointer & 0xFF) == 0);
+        ccr.setNegative((stackPointer & 0x8000) != 0);
+        ccr.setZero(stackPointer == 0);
         ccr.setOverflow(false);
     }
     //extended
