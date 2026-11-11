@@ -69,8 +69,10 @@ public class MemoryManager {
             memory[address] = data;
         } else if (addressSpace == 2){
             // PIA
+            writePIA(address, data);
         } else if (addressSpace == 3){
             // ACIA
+            writeACIA(address, data);
         }
     }
 // TO FIGURE OUT LATER
@@ -86,7 +88,7 @@ public class MemoryManager {
 
     }
 
-    private void readACIA(int address, byte data){
+    private void writeACIA(int address, byte data){
 
     }
 }

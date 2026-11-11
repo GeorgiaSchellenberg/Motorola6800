@@ -142,7 +142,7 @@ public class CPU {
 
     //accumulator B
     //immediate addressing
-    public void ANDB_imm() {
+    public void ANDB_IMM() {
         // get immediate value
         int operand = fetch();
         accumulatorB = accumulatorB & operand;
@@ -379,8 +379,8 @@ public class CPU {
         int offset = fetch();
         // convert to signed 7-bit integer
         byte signedOffset = (byte) offset;
-        // if (!Z & N & V) OR (!N & !V)
-        if ((!ccr.getZero() & (ccr.getNegative() & ccr.getOverflow())) | (!ccr.getNegative() & !ccr.getOverflow())) {
+        // if (!Z & ((N & V) OR (!N & !V))
+        if (!ccr.getZero() && ((ccr.getNegative() && ccr.getOverflow()) || (!ccr.getNegative() && !ccr.getOverflow()))) {
             programCounter = programCounter + signedOffset;
         }
     }
@@ -390,7 +390,7 @@ public class CPU {
         int offset = fetch();
         byte signedOffset = (byte) offset;
 
-        if (!ccr.getCarry() & !ccr.getZero()) {
+        if (!ccr.getCarry() && !ccr.getZero()) {
             programCounter = programCounter + signedOffset;
         }
     }
@@ -406,8 +406,8 @@ public class CPU {
         int res = accumulatorA & operand;
         res = res & 0xFF;
 
-        ccr.setCarry((res & 0x80) != 0);
-        ccr.setZero((res & 0xFF) == 0);
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setZero(res == 0);
         ccr.setOverflow(false);
     }
 
@@ -419,8 +419,8 @@ public class CPU {
         int res = accumulatorA & operand;
         res = res & 0xFF;
 
-        ccr.setCarry((res & 0x80) != 0);
-        ccr.setZero((res & 0xFF) == 0);
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setZero(res == 0);
         ccr.setOverflow(false);
     }
 
@@ -436,8 +436,8 @@ public class CPU {
         int res = accumulatorA & operand;
         res = res & 0xFF;
 
-        ccr.setCarry((res & 0x80) != 0);
-        ccr.setZero((res & 0xFF) == 0);
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setZero(res == 0);
         ccr.setOverflow(false);
     }
 
@@ -449,8 +449,8 @@ public class CPU {
         int res = accumulatorA & operand;
         res = res & 0xFF;
 
-        ccr.setCarry((res & 0x80) != 0);
-        ccr.setZero((res & 0xFF) == 0);
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setZero(res == 0);
         ccr.setOverflow(false);
     }
 
@@ -464,8 +464,8 @@ public class CPU {
         int res = accumulatorB & operand;
         res = res & 0xFF;
 
-        ccr.setCarry((res & 0x80) != 0);
-        ccr.setZero((res & 0xFF) == 0);
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setZero(res == 0);
         ccr.setOverflow(false);
     }
 
@@ -477,8 +477,8 @@ public class CPU {
         int res = accumulatorB & operand;
         res = res & 0xFF;
 
-        ccr.setCarry((res & 0x80) != 0);
-        ccr.setZero((res & 0xFF) == 0);
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setZero(res == 0);
         ccr.setOverflow(false);
     }
 
@@ -494,8 +494,8 @@ public class CPU {
         int res = accumulatorB & operand;
         res = res & 0xFF;
 
-        ccr.setCarry((res & 0x80) != 0);
-        ccr.setZero((res & 0xFF) == 0);
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setZero(res == 0);
         ccr.setOverflow(false);
     }
 
@@ -507,7 +507,7 @@ public class CPU {
         int res = accumulatorB & operand;
         res = res & 0xFF;
 
-        ccr.setCarry((res & 0x80) != 0);
+        ccr.setNegative((res & 0x80) != 0);
         ccr.setZero((res & 0xFF) == 0);
         ccr.setOverflow(false);
     }
@@ -588,26 +588,19 @@ public class CPU {
     //Decrement
     //accumulatorA
     public void DECA(){
-        int res = accumulatorA - 1;
-        ccr.setNegative((accumulatorA & 0x80) != 0);
-        ccr.setZero((accumulatorA & 0xFF) == 0);
-        if (((accumulatorA & 0x80) != 0x80)){
-            ccr.setOverflow(true);
-        } else {
-            ccr.setOverflow(false);
-        }
+        int res = accumulatorA - 1 & 0xFF;
+
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setZero(res == 0);
+        ccr.setOverflow(accumulatorA == 0x80);
         accumulatorA = res;
     }
     //accumulatorB
     public void DECB(){
-        int res = accumulatorB - 1;
-        ccr.setNegative((accumulatorB & 0x80) != 0);
-        ccr.setZero((accumulatorB & 0xFF) == 0);
-        if (((accumulatorB & 0x80) != 0x80)){
-            ccr.setOverflow(true);
-        } else {
-            ccr.setOverflow(false);
-        }
+        int res = accumulatorB - 1 & 0xFF;
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setZero(res == 0);
+        ccr.setOverflow(accumulatorB == 0x80);
         accumulatorB = res;
     }
     //extended
@@ -620,11 +613,11 @@ public class CPU {
     }
     //Decrement Stack Pointer
     public void DES(){
-        stackPointer = stackPointer - 4; // a nybble?
+        stackPointer = stackPointer - 1 & 0xFFFF;
     }
     //Decrement Index Register
     public void DEX(){
-        indexRegister = indexRegister - 1; // should be 4?
+        indexRegister = indexRegister - 1 & 0xFFFF;
 
         // update
     }
@@ -651,11 +644,11 @@ public class CPU {
     }
     //Increment Stack Pointer
     public void INS(){
-        stackPointer = stackPointer + 1;
+        stackPointer = stackPointer + 1 & 0xFFFF;
     }
     //Increment Index Register
     public void INX(){
-        indexRegister = indexRegister + 1;
+        indexRegister = indexRegister + 1 & 0xFFFF;
 
         // update Z if all 16 bits are 0
         if (indexRegister == 0){
@@ -672,14 +665,14 @@ public class CPU {
         //combine upper and lower addresses
         int address = (upperAddress << 8) | lowerAddress;
 
-        programCounter = address;
+        programCounter = address & 0xFFFF;
 
     }
     //indexed
     public void JMP_IND(){
         int address = fetch() + indexRegister;
 
-        programCounter = address;
+        programCounter = address & 0xFFFF;
     }
     //Jump to Subroutine
     public void JSR(){
@@ -741,7 +734,7 @@ public class CPU {
     //direct
     public void LDB_DIR(){
         int address = fetch();
-        accumulatorA = memory.read(address);
+        accumulatorB = memory.read(address);
 
         ccr.setNegative((accumulatorB & 0x80) != 0);
         ccr.setZero((accumulatorB & 0xFF) == 0);
@@ -754,7 +747,7 @@ public class CPU {
 
         int address = (upperAddress << 8) | lowerAddress;
 
-        accumulatorA = memory.read(address);
+        accumulatorB = memory.read(address);
 
         ccr.setNegative((accumulatorB & 0x80) != 0);
         ccr.setZero((accumulatorB & 0xFF) == 0);
@@ -764,7 +757,7 @@ public class CPU {
     public void LDB_IND(){
         int address = fetch() + indexRegister;
 
-        accumulatorA = memory.read(address);
+        accumulatorB = memory.read(address);
 
         ccr.setNegative((accumulatorB & 0x80) != 0);
         ccr.setZero((accumulatorB & 0xFF) == 0);

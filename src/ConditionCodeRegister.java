@@ -64,9 +64,11 @@ public class ConditionCodeRegister {
     public void setZero(boolean z){
         this.zero = z;
     }
+
     public void setInterrupt(boolean i){
         this.interrupt = i;
     }
+
     public void setHalfCarry(boolean h){
         this.halfCarry = h;
     }
