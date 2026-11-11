@@ -73,6 +73,9 @@ public class ConditionCodeRegister {
         this.halfCarry = h;
     }
 
-    public void checkAndSetNegative(){}
+    public String toString(){
+        return ("C: " + carry + " V: " + overflow + " N: " +
+                negative + " Z: " + zero + " I: " + interrupt + " H: " + halfCarry);
+    }
 
 }

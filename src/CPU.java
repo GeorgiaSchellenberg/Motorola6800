@@ -310,30 +310,28 @@ public class CPU {
 
     //execute
 
+
     //add accumulator B to accumulator A
     public void ABA() {
         int res = accumulatorA + accumulatorB;
         // trim the result
         res = res & 0xFF;
         //check HalfCarry
-        if (((accumulatorA & 0x08) & (accumulatorB & 0x08)) != 0) {
-            ccr.setHalfCarry(true);
-        } else if (((accumulatorB & 0x08) & (res & 0x08)) != 0) {
-            ccr.setHalfCarry(true);
-        } else if (((accumulatorA & 0x08) & (res & 0x08)) != 0) {
-            ccr.setHalfCarry(true);
-        } else {
-            ccr.setHalfCarry(false);
-        }
+        boolean A3 = (accumulatorA & 0x08) != 0;
+        boolean B3 = (accumulatorB & 0x08) != 0;
+        boolean R3 = (res & 0x08) != 0;
+
+        ccr.setHalfCarry((A3 && B3) || (B3 && !R3) || (!R3 && A3));
         //check Negative
         ccr.setNegative((res & 0x80) != 0);
         //check Zero
         ccr.setZero((res & 0xFF) == 0);
         //check Overflow
-        //if (((accumulatorA & 0x08) == 1) & ((accumulatorB & 0x08) == 1) & ((res & 0x08) == 0){
-
-        //}
-        //chek Carry
+        boolean A7 = (accumulatorA & 0x80) != 0;
+        boolean B7 = (accumulatorB & 0x80) != 0;
+        boolean R7 = (res & 0x80) != 0;
+        ccr.setOverflow((A7 && B7 && !R7) || (!A7 && !B7 && R7));
+        ccr.setCarry((A7 && B7) || (B7 && !R7) || (!R7 && A7));
 
     }
 
