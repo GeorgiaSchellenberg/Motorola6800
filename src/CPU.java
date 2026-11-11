@@ -24,8 +24,6 @@ public class CPU {
         memory = new MemoryManager();
     }
 
-    //method for loading program into memory
-
 
     //fetch - grabs next byte from memory and increments PC
     public int fetch() {
@@ -36,6 +34,65 @@ public class CPU {
         return data;
     }
     //decode
+    public void decoder(int opcode){
+        switch(opcode) {
+            //:::::::::::::: Add Accumulators
+            case 0x1B: ABA();break;
+            //:::::::::::::: Add With Carry
+            case 0x89: ADCA_IMM();break;
+            case 0x99: ADCA_DIR();break;
+            case 0xB9: ADCA_EXT();break;
+            case 0xA9: ADCA_IND();break;
+            case 0xC9: ADCB_IMM();break;
+            case 0xD9: ADCB_DIR();break;
+            case 0xF9: ADCB_EXT();break;
+            case 0xE9: ADCB_IND();break;
+            //:::::::::::::: Add Without Carry
+            case 0x8B: ADDA_IMM();break;
+            case 0x9B: ADDA_DIR();break;
+            case 0xBB: ADDA_EXT();break;
+            case 0xAB: ADDA_IND();break;
+            case 0xCB: ADDB_IMM();break;
+            case 0xDB: ADDB_DIR();break;
+            case 0xFB: ADDB_EXT();break;
+            case 0xEB: ADDB_IND();break;
+            //:::::::::::::: Logical And
+            case 0x84: ANDA_IMM();break;
+            case 0x94: ANDA_DIR();break;
+            case 0xB4: ANDA_EXT();break;
+            case 0xA4: ANDA_IND();break;
+            case 0xC4: ANDB_IMM();break;
+            case 0xD4: ANDB_DIR();break;
+            case 0xF4: ANDB_EXT();break;
+            case 0xE4: ANDB_IND();break;
+            //:::::::::::::: Arithmetic Shift Left
+            case 0x48: ASLA();break;
+            case 0x58: ASLB();break;
+            case 0x78: ASL_EXT();break;
+            case 0x68: ASL_IND();break;
+            //:::::::::::::: Arithmetic Shift Right
+            case 0x47: ASRA();break;
+            case 0x57: ASRB();break;
+            case 0x77: ASR_EXT();break;
+            case 0x67: ASR_IND();break;
+            //:::::::::::::: Branch if Carry Clear
+            case 0x24: BCC();break;
+            //:::::::::::::: Branch if Carry Set
+            case 0x25: BCS();break;
+            //:::::::::::::: Branch if Equal
+            case 0x27: BEQ();break;
+            //:::::::::::::: Branch if Greater than or Equal to Zero
+            case 0x2C: BGE();break;
+            //:::::::::::::: Branch if Greater than Zero
+            case 0x2E: BGT();
+            //:::::::::::::: Branch if Higher
+            case 0x22: BHI();break;
+            //:::::::::::::: Bit Test
+
+
+
+        }
+    }
 
     //execute
 
@@ -66,16 +123,76 @@ public class CPU {
 
     }
 
-    //add with carr
-    public void ADC() {
+    //Add With Carry
+    //accumulator A
+    //immediate
+    public void ADCA_IMM() {
 
     }
-
-    //add without carry
-    public void ADD() {
+    //direct
+    public void ADCA_DIR(){
 
     }
+    //extended
+    public void ADCA_EXT(){
 
+    }
+    //indexed
+    public void ADCA_IND(){
+
+    }
+    //accumulator B
+    //immediate
+    public void ADCB_IMM(){
+
+    }
+    //direct
+    public void ADCB_DIR(){
+
+    }
+    //extended
+    public void ADCB_EXT(){
+
+    }
+    //indexed
+    public void ADCB_IND(){
+
+    }
+    //Add Without Carry
+    //accumulator A
+    //immediate
+    public void ADDA_IMM(){
+
+    }
+    //direct
+    public void ADDA_DIR(){
+
+    }
+    //extended
+    public void ADDA_EXT(){
+
+    }
+    //indexed
+    public void ADDA_IND(){
+
+    }
+    //accumulator B
+    //immediate
+    public void ADDB_IMM() {
+
+    }
+    //direct
+    public void ADDB_DIR(){
+
+    }
+    //extended
+    public void ADDB_EXT(){
+
+    }
+    //indexed
+    public void ADDB_IND(){
+
+    }
     //logical AND
     //accumulator A
     public void ANDA_IMM() {
