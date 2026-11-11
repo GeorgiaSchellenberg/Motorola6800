@@ -687,7 +687,7 @@ public class CPU {
         accumulatorA = fetch();
 
         ccr.setNegative((accumulatorA & 0x80) != 0);
-        ccr.setZero((accumulatorA & 0xFF) == 0);
+        ccr.setZero(accumulatorA == 0);
         ccr.setOverflow(false);
     }
     //direct
@@ -696,7 +696,7 @@ public class CPU {
         accumulatorA = memory.read(address);
 
         ccr.setNegative((accumulatorA & 0x80) != 0);
-        ccr.setZero((accumulatorA & 0xFF) == 0);
+        ccr.setZero(accumulatorA == 0);
         ccr.setOverflow(false);
     }
     //extended
@@ -709,7 +709,7 @@ public class CPU {
         accumulatorA = memory.read(address);
 
         ccr.setNegative((accumulatorA & 0x80) != 0);
-        ccr.setZero((accumulatorA & 0xFF) == 0);
+        ccr.setZero(accumulatorA == 0);
         ccr.setOverflow(false);
     }
     //index
@@ -719,7 +719,7 @@ public class CPU {
         accumulatorA = memory.read(address);
 
         ccr.setNegative((accumulatorA & 0x80) != 0);
-        ccr.setZero((accumulatorA & 0xFF) == 0);
+        ccr.setZero(accumulatorA == 0);
         ccr.setOverflow(false);
     }
     //accumulator B
@@ -729,7 +729,7 @@ public class CPU {
         accumulatorB = fetch();
 
         ccr.setNegative((accumulatorB & 0x80) != 0);
-        ccr.setZero((accumulatorB & 0xFF) == 0);
+        ccr.setZero(accumulatorB == 0);
         ccr.setOverflow(false);
     }
     //direct
@@ -738,7 +738,7 @@ public class CPU {
         accumulatorB = memory.read(address);
 
         ccr.setNegative((accumulatorB & 0x80) != 0);
-        ccr.setZero((accumulatorB & 0xFF) == 0);
+        ccr.setZero(accumulatorB == 0);
         ccr.setOverflow(false);
     }
     //extended
@@ -746,12 +746,12 @@ public class CPU {
         int upperAddress = fetch();
         int lowerAddress = fetch();
 
-        int address = (upperAddress << 8) | lowerAddress;
+        int address = (upperAddress << 8) | lowerAddress & 0xFFFF;
 
         accumulatorB = memory.read(address);
 
         ccr.setNegative((accumulatorB & 0x80) != 0);
-        ccr.setZero((accumulatorB & 0xFF) == 0);
+        ccr.setZero(accumulatorB == 0);
         ccr.setOverflow(false);
     }
     //index
@@ -761,7 +761,7 @@ public class CPU {
         accumulatorB = memory.read(address);
 
         ccr.setNegative((accumulatorB & 0x80) != 0);
-        ccr.setZero((accumulatorB & 0xFF) == 0);
+        ccr.setZero(accumulatorB == 0);
         ccr.setOverflow(false);
     }
     //Load Stack Pointer
@@ -791,10 +791,29 @@ public class CPU {
     }
     //extended
     public void LDS_EXT(){
-        int upper = 0;
+        int upper = fetch();
+        int lower = fetch();
+
+        int hb = memory.read(upper);
+        int lb = memory.read(lower);
+
+        stackPointer = ((hb << 8) | lb) & 0xFFFF;
+
+        ccr.setNegative((stackPointer & 0x8000) != 0);
+        ccr.setZero(stackPointer == 0);
+        ccr.setOverflow(false);
     }
     //indexed
-    public void LDS_IND(){}
+    public void LDS_IND(){
+        int address = fetch() + indexRegister & 0xFFFF;
+
+        stackPointer = memory.read(address);
+
+
+        ccr.setNegative((stackPointer & 0x8000) != 0);
+        ccr.setZero(stackPointer == 0);
+        ccr.setOverflow(false);
+    }
     //Load Index Register
 
 }
