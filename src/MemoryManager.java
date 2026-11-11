@@ -53,8 +53,6 @@ public class MemoryManager {
         }
     }
 
-
-
     // write to ram or io
     public void write (int address, byte data){
         int addressSpace = readAddress(address);

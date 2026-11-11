@@ -213,7 +213,7 @@ public class CPU {
             case 0x70: NEG_EXT();break;
             case 0x60: NEG_IND();break;
             //:::::::::::::: No Operation
-            case 0x01: NEG();break;
+            case 0x01: NOP();break;
             //:::::::::::::: Inclusive OR
             case 0x8A: ORAA_IMM();break;
             case 0x9A: ORAA_DIR();break;
@@ -841,7 +841,63 @@ public class CPU {
         ccr.setOverflow(false);
     }
 
-    //clear carry
+    //Branch if Less than or Equal to Zero
+    public void BLE(){
+
+    }
+
+    //Branch if Lower or Same
+    public void BLS(){
+
+    }
+
+    //Branch if Less than Zero
+    public void BLT(){
+
+    }
+
+    //Branch if Minus
+    public void BMI(){
+
+    }
+
+    //Branch if Not Equal
+    public void BNE(){
+
+    }
+
+    //Branch is Plus
+    public void BPL(){
+
+    }
+
+    //Branch Always
+    public void BRA(){
+
+    }
+
+    //Branch to Subrouting
+    public void BSR(){
+
+    }
+
+    //Branch if Overflow Clear
+    public void BVC(){
+
+    }
+
+    //Branch if Overflow Set
+    public void BVS(){
+
+    }
+
+    //Compare Accummulators
+    public void CBA(){
+
+    }
+
+
+    //Clear Carry
     public void CLC() {
         ccr.setCarry(false);
     }
@@ -903,17 +959,76 @@ public class CPU {
     //Compare
     //accumulator A
     //immediate
+    public void CMPA_IMM(){
+
+    }
     //direct
+    public void CMPA_DIR(){
+
+    }
     //extended
+    public void CMPA_EXT(){
+
+    }
     //indexed
+    public void CMPA_IND(){
+
+    }
     //accumulator B
     //immediate
+    public void CMPB_IMM(){
+
+    }
     //direct
+    public void CMPB_DIR(){
+
+    }
     //extended
+    public void CMPB_EXT(){
+
+    }
     //indexed
+    public void CMPB_IND(){
+
+    }
     //Complement
+    //accumulator A
+    public void COMA(){
+
+    }
+    //accumulator B
+    public void COMB(){
+
+    }
+    //extended
+    public void COM_EXT(){
+
+    }
+    //indexed
+    public void COM_IND(){
+
+    }
     //Compare Index Register
+    //immediate
+    public void CPX_IMM(){
+
+    }
+    //direct
+    public void CPX_DIR(){
+
+    }
+    //extended
+    public void CPX_EXT(){
+
+    }
+    //indexed
+    public void CPX_IND(){
+
+    }
     //Decimal Adjust ACCA
+    public void DAA(){
+
+    }
     //Decrement
     //accumulatorA
     public void DECA(){
@@ -952,7 +1067,38 @@ public class CPU {
         ccr.setZero(indexRegister == 0);
     }
     //Exclusive OR
-    public void EOR(){
+    //accumulator A
+    //immediate
+    public void EORA_IMM(){
+
+    }
+    //direct
+    public void EORA_DIR(){
+
+    }
+    //extended
+    public void EORA_EXT(){
+
+    }
+    //indexed
+    public void EORA_IND(){
+
+    }
+    //accumulator B
+    //immediate
+    public void EORB_IMM(){
+
+    }
+    //direct
+    public void EORB_DIR(){
+
+    }
+    //extended
+    public void EORB_EXT(){
+
+    }
+    //indexed
+    public void EORB_IND(){
 
     }
     //Increment
@@ -1005,7 +1151,12 @@ public class CPU {
         programCounter = address & 0xFFFF;
     }
     //Jump to Subroutine
-    public void JSR(){
+    //extended
+    public void JSR_EXT(){
+
+    }
+    //indexed
+    public void JSR_IND(){
 
     }
     //Load Accumulator
@@ -1144,5 +1295,293 @@ public class CPU {
         ccr.setOverflow(false);
     }
     //Load Index Register
+    //immediate
+    public void LDX_IMM(){
 
+    }
+    //direct
+    public void LDX_DIR(){
+
+    }
+    //extended
+    public void LDX_EXT(){
+
+    }
+    //indexed
+    public void LDX_IND(){
+
+    }
+    //Logical Shift Right
+    //accumulator A
+    public void LSRA(){
+
+    }
+    //accumulator B
+    public void LSRB(){
+
+    }
+    //extended
+    public void LSR_EXT(){
+
+    }
+    //indexed
+    public void LSR_IND(){
+
+    }
+    //Negate
+    //accumulator A
+    public void NEGA(){
+
+    }
+    //accumulator B
+    public void NEGB(){
+
+    }
+    //extended
+    public void NEG_EXT(){
+
+    }
+    //indexed
+    public void NEG_IND(){
+
+    }
+    //No Operation
+    public void NOP(){
+
+    }
+    //Inclusive OR
+    //accumulator A
+    //immediate
+    public void ORAA_IMM(){
+
+    }
+    //direct
+    public void ORAA_DIR(){
+
+    }
+    //extended
+    public void ORAA_EXT(){
+
+    }
+    //indexed
+    public void ORAA_IND(){
+
+    }
+    //accumulator B
+    //immediate
+    public void ORAB_IMM(){
+
+    }
+    //direct
+    public void ORAB_DIR(){
+
+    }
+    //extended
+    public void ORAB_EXT(){
+
+    }
+    //indexed
+    public void ORAB_IND(){
+
+    }
+    //Push Data Onto Stack
+    //accumlator A
+    public void PSHA(){
+
+    }
+    //accumulator B
+    public void PSHB(){
+
+    }
+    //Pull Data from Stack
+    //accumulator A
+    public void PULA(){
+
+    }
+    //accumulator B
+    public void PULB(){
+
+    }
+    //Rotate Left
+    //accumulator A
+    public void ROLA(){
+
+    }
+    //accumulator B
+    public void ROLB(){
+
+    }
+    //extended
+    public void ROL_EXT(){
+
+    }
+    //indexed
+    public void ROL_IND(){
+
+    }
+    //Rotate Right
+    //accumulator A
+    public void RORA(){
+
+    }
+    //accumulator B
+    public void RORB(){
+
+    }
+    //extended
+    public void ROR_EXT(){
+
+    }
+    //indexed
+    public void ROR_IND(){
+
+    }
+    //Return from Interrupt
+    public void RTI(){
+
+    }
+    //Return from Subroutine
+    public void RTS(){
+
+    }
+    //Subtract Accumulator
+    public void SBA(){
+
+    }
+    //Subtract with Carry
+    //accumulator A
+    //immediate
+    public void SBCA_IMM(){
+
+    }
+    //direct
+    public void SBCA_DIR(){
+
+    }
+    //extended
+    public void SBCA_EXT(){
+
+    }
+    //indexed
+    public void SBCA_IND(){
+
+    }
+    //accumulator B
+    //immediate
+    public void SBCB_IMM(){
+
+    }
+    //direct
+    public void SBCB_DIR(){
+
+    }
+    //extended
+    public void SBCB_EXT(){
+
+    }
+    //indexed
+    public void SBCB_IND(){
+
+    }
+    //Set Carry
+    public void SEC(){
+
+    }
+    //Set Interrupt Mask
+    public void SEI(){
+
+    }
+    //Set Two's Complement Overflow Bit
+    public void SEV(){
+
+    }
+    //Store Accumulator
+    //accumulator A
+    //direct
+    public void STAA_DIR(){
+
+    }
+    //extended
+    public void STAA_EXT(){
+
+    }
+    //indexed
+    public void STAA_IND(){
+
+    }
+    //accumulator B
+    //direct
+    public void STAB_DIR(){
+
+    }
+    //extended
+    public void STAB_EXT(){
+
+    }
+    //indexed
+    public void STAB_IND(){
+
+    }
+    //Store Stack Pointer
+    //direct
+    public void STS_DIR(){
+
+    }
+    //extended
+    public void STS_EXT(){
+
+    }
+    //indexed
+    public void STS_IND(){
+
+    }
+    //Store Index Register
+    //direct
+    public void STX_DIR(){
+
+    }
+    //extended
+    public void STX_EXT(){
+
+    }
+    //indexed
+    public void STX_IND(){
+
+    }
+    //Subtract
+    //accumulator A
+    //immediate
+    public void SUBA_IMM(){
+
+    }
+    //direct
+    public void SUBA_DIR(){
+
+    }
+    //extended
+    public void SUBA_EXT(){
+
+    }
+    //indexed
+    public void SUBA_IND(){
+
+    }
+    //accumulator B
+    //immediate
+    public void SUBB_IMM(){
+
+    }
+    //direct
+    public void SUBB_DIR(){
+
+    }
+    //extended
+    public void SUBB_EXT(){
+
+
+    }
+    //indexed
+    public void SUBB_IND(){
+        
+    }
 }
