@@ -79,10 +79,10 @@ public class CPU {
             case 0x78: ASL(2);break;
             case 0x68: ASL(3);break;
             //:::::::::::::: Arithmetic Shift Right
-            case 0x47: ASRA();break;
-            case 0x57: ASRB();break;
-            case 0x77: ASR_EXT();break;
-            case 0x67: ASR_IND();break;
+            case 0x47: ASR('A');break;
+            case 0x57: ASR('B');break;
+            case 0x77: ASR(2);break;
+            case 0x67: ASR(3);break;
             //:::::::::::::: Branch if Carry Clear
             case 0x24: BCC();break;
             //:::::::::::::: Branch if Carry Set
@@ -96,14 +96,14 @@ public class CPU {
             //:::::::::::::: Branch if Higher
             case 0x22: BHI();break;
             //:::::::::::::: Bit Test
-            case 0x85: BITA_IMM();break;
-            case 0x95: BITA_DIR();break;
-            case 0xB5: BITA_EXT();break;
-            case 0xA5: BITA_IND();break;
-            case 0xC5: BITB_IMM();break;
-            case 0xD5: BITB_DIR();break;
-            case 0xF5: BITB_EXT();break;
-            case 0xE5: BITB_IND();break;
+            case 0x85: BIT('A', 0);break;
+            case 0x95: BIT('A', 1);break;
+            case 0xB5: BIT('A', 2);break;
+            case 0xA5: BIT('A', 3);break;
+            case 0xC5: BIT('B', 0);break;
+            case 0xD5: BIT('B', 1);break;
+            case 0xF5: BIT('B', 2);break;
+            case 0xE5: BIT('B', 3);break;
             //:::::::::::::: Branch is Less than or Equal to Zero
             case 0x2F: BLE();break;
             //:::::::::::::: Branch if Lower or Same
@@ -131,22 +131,22 @@ public class CPU {
             //:::::::::::::: Clear Interrupt Mask
             case 0x0E: CLI();break;
             //:::::::::::::: Clear
-            case 0x4F: CLRA();break;
-            case 0x5F: CLRB();break;
-            case 0x7F: CLR_EXT();break;
-            case 0x6F: CLR_IND();break;
+            case 0x4F: CLR('A');break;
+            case 0x5F: CLR('B');break;
+            case 0x7F: CLR(2);break;
+            case 0x6F: CLR(3);break;
             //:::::::::::::: Clear Two's Complement Overflow Bit
             case 0x0A: CLV();break;
             //:::::::::::::: Compare
-            case 0x81: CMPA_IMM();break;
-            case 0x91: CMPA_DIR();break;
-            case 0xB1: CMPA_EXT();break;
-            case 0xA1: CMPA_IND();break;
-            case 0xC1: CMPB_IMM();break;
-            case 0xD1: CMPB_DIR();break;
-            case 0xF1: CMPB_EXT();break;
-            case 0xE1: CMPB_IND();break;
-            //:::::::::::::: Complement
+            case 0x81: CMP('A', 0);break;
+            case 0x91: CMP('A', 1);break;
+            case 0xB1: CMP('A', 2);break;
+            case 0xA1: CMP('A', 3);break;
+            case 0xC1: CMP('B', 0);break;
+            case 0xD1: CMP('B', 1);break;
+            case 0xF1: CMP('B', 2);break;
+            case 0xE1: CMP('B', 3);break;
+            //:::::::::::::: Complement **** I STOPPED HERE ****
             case 0x43: COMA();break;
             case 0x53: COMB();break;
             case 0x73: COM_EXT();break;
@@ -470,17 +470,32 @@ public class CPU {
     }
 
     //Arithmetic Shift Right
-    //accumulator A
-    public void ASRA() {
-    }
-
-    public void ASRB() {
-    }
-
-    public void ASR_EXT() {
-    }
-
-    public void ASR_IND() {
+    public void ASR (int addressingMode){
+        int res;
+        if (addressingMode == 'A'){
+            int sign = accumulatorA & 0x80;
+            ccr.setCarry((accumulatorA & 0x01) != 0);
+            res = ((accumulatorA >> 1) | sign) & 0xFF;
+            accumulatorA = res;
+        } else if (addressingMode == 'B'){
+            int sign = accumulatorB & 0x80;
+            ccr.setCarry((accumulatorB & 0x01) != 0);
+            res  = ((accumulatorB >> 1) | sign) & 0xFF;
+            accumulatorB = res;
+        } else {
+            int address = getAddress(addressingMode);
+            int operand = memory.read(address);
+            int sign = operand & 0x80;
+            ccr.setCarry((operand & 0x01) != 0);
+            res = ((operand >> 1) | sign) & 0xFF;
+            memory.write(address, (byte)res);
+        }
+        // check negative
+        ccr.setNegative((res & 0x80) != 0);
+        // check zero
+        ccr.setZero(res == 0);
+        // check overflow
+        ccr.setOverflow((ccr.getNegative() && !ccr.getCarry()) || (!ccr.getNegative() && ccr.getCarry()));
     }
 
     //Branch if Carry Clear
@@ -559,120 +574,29 @@ public class CPU {
     }
 
     //Bit Test
-    //Accumulator A
-    //immediate
-    public void BITA_IMM() {
-        //fetch operand
-        int operand = fetch();
+    public void BIT(int accx, int addressingMode) {
+        int operand;
+        int res;
+        if (addressingMode == 0){
+            //immediate addressing
+            operand = fetch();
+        } else {
+            int address = getAddress(addressingMode);
+            operand = memory.read(address);
+        }
 
-        //don't update accumulator or memory
-        int res = accumulatorA & operand;
+        if (accx == 'A'){
+            res = accumulatorA & operand;
+
+        } else {
+            res = accumulatorB & operand;
+        }
         res = res & 0xFF;
 
         ccr.setNegative((res & 0x80) != 0);
         ccr.setZero(res == 0);
         ccr.setOverflow(false);
-    }
 
-    //direct
-    public void BITA_DIR() {
-        int address = fetch();
-        int operand = memory.read(address);
-
-        int res = accumulatorA & operand;
-        res = res & 0xFF;
-
-        ccr.setNegative((res & 0x80) != 0);
-        ccr.setZero(res == 0);
-        ccr.setOverflow(false);
-    }
-
-    //extended
-    public void BITA_EXT() {
-        int upperAddress = fetch();
-        int lowerAddress = fetch();
-        //combine 2 8-bit addresses
-        int address = (upperAddress << 8) | lowerAddress;
-        // get value to be shifted
-        int operand = memory.read(address);
-
-        int res = accumulatorA & operand;
-        res = res & 0xFF;
-
-        ccr.setNegative((res & 0x80) != 0);
-        ccr.setZero(res == 0);
-        ccr.setOverflow(false);
-    }
-
-    //indexed
-    public void BITA_IND() {
-        int address = fetch() + indexRegister;
-        int operand = memory.read(address);
-
-        int res = accumulatorA & operand;
-        res = res & 0xFF;
-
-        ccr.setNegative((res & 0x80) != 0);
-        ccr.setZero(res == 0);
-        ccr.setOverflow(false);
-    }
-
-    //Accumulator B
-    //immediate
-    public void BITB_IMM() {
-        //fetch operand
-        int operand = fetch();
-
-        //don't update accumulator or memory
-        int res = accumulatorB & operand;
-        res = res & 0xFF;
-
-        ccr.setNegative((res & 0x80) != 0);
-        ccr.setZero(res == 0);
-        ccr.setOverflow(false);
-    }
-
-    //direct
-    public void BITB_DIR() {
-        int address = fetch();
-        int operand = memory.read(address);
-
-        int res = accumulatorB & operand;
-        res = res & 0xFF;
-
-        ccr.setNegative((res & 0x80) != 0);
-        ccr.setZero(res == 0);
-        ccr.setOverflow(false);
-    }
-
-    //extended
-    public void BITB_EXT() {
-        int upperAddress = fetch();
-        int lowerAddress = fetch();
-        //combine 2 8-bit addresses
-        int address = (upperAddress << 8) | lowerAddress;
-        // get value to be shifted
-        int operand = memory.read(address);
-
-        int res = accumulatorB & operand;
-        res = res & 0xFF;
-
-        ccr.setNegative((res & 0x80) != 0);
-        ccr.setZero(res == 0);
-        ccr.setOverflow(false);
-    }
-
-    //indexed
-    public void BITB_IND() {
-        int address = fetch() + indexRegister;
-        int operand = memory.read(address);
-
-        int res = accumulatorB & operand;
-        res = res & 0xFF;
-
-        ccr.setNegative((res & 0x80) != 0);
-        ccr.setZero((res & 0xFF) == 0);
-        ccr.setOverflow(false);
     }
 
     //Branch if Less than or Equal to Zero
@@ -691,7 +615,7 @@ public class CPU {
 
     //Branch if Less than Zero
     public void BLT(){
-        if ((ccr.getNegative() && !ccr.getOverflow() || (!ccr.getNegative() && ccr.getOverflow())));{
+        if ((ccr.getNegative() && !ccr.getOverflow() || (!ccr.getNegative() && ccr.getOverflow()))){
             programCounter = programCounter + fetch();
         }
     }
@@ -765,90 +689,54 @@ public class CPU {
     public void CLI() {
         ccr.setInterrupt(false);
     }
-
     //clear
-    //accumulator A
-    public void CLRA() {
-        accumulatorA = 0;
+    public void CLR(int addressingMode){
+        switch (addressingMode){
+            case 'A': accumulatorA = 0; break;
+            case 'B': accumulatorB = 0; break;
+            case 2:
+            case 3:
+                memory.write(getAddress(addressingMode), (byte)0);
+                break;
+        }
         ccr.setNegative(false);
         ccr.setZero(true);
         ccr.setOverflow(false);
         ccr.setCarry(false);
     }
-
-    //accumulator B
-    public void CLRB() {
-        accumulatorB = 0;
-        ccr.setNegative(false);
-        ccr.setZero(true);
-        ccr.setOverflow(false);
-        ccr.setCarry(false);
-    }
-
-    //extended
-    public void CLR_EXT() {
-        int upperAddress = fetch();
-        int lowerAddress = fetch();
-        //combine 2 8-bit addresses
-        int address = (upperAddress << 8) | lowerAddress;
-        // write to address
-        memory.write(address, (byte) 0);
-
-        ccr.setNegative(false);
-        ccr.setZero(true);
-        ccr.setOverflow(false);
-        ccr.setCarry(false);
-    }
-
-    //indexed
-    public void CLR_IND() {
-        int address = fetch() + indexRegister;
-        memory.write(address, (byte) 0);
-
-        ccr.setNegative(false);
-        ccr.setZero(true);
-        ccr.setOverflow(false);
-        ccr.setCarry(false);
-    }
-
     //Clear Two's Complement Overflow Bit
     public void CLV() {
         ccr.setOverflow(false);
     }
     //Compare
-    //accumulator A
-    //immediate
-    public void CMPA_IMM(){
+    public void CMP(int accx, int addressingMode){
+        int accumulator;
+        int operand;
+        // fetch operand from memory
+        if (addressingMode == 0){
+            operand = fetch();
+        } else {
+            operand = memory.read(getAddress(addressingMode));
+        }
 
-    }
-    //direct
-    public void CMPA_DIR(){
+        // perform comparison
+        if (accx == 'A'){
+            accumulator = accumulatorA;
+        } else {
+            accumulator = accumulatorB;
+        }
 
-    }
-    //extended
-    public void CMPA_EXT(){
+        int res = accumulator - operand;
+        res = res & 0xFF;
 
-    }
-    //indexed
-    public void CMPA_IND(){
+        boolean X7 = (accumulator & 0x80) != 0;
+        boolean M7 = (operand & 0x80) != 0;
+        boolean R7 = (res & 0x80) != 0;
 
-    }
-    //accumulator B
-    //immediate
-    public void CMPB_IMM(){
-
-    }
-    //direct
-    public void CMPB_DIR(){
-
-    }
-    //extended
-    public void CMPB_EXT(){
-
-    }
-    //indexed
-    public void CMPB_IND(){
-
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setZero(res == 0);
+        ccr.setOverflow((X7 && !M7 && !R7) || (!X7 && M7 && R7));
+        ccr.setCarry((!X7 && M7) || (M7 && R7) || (R7 && !X7));
     }
     //Complement
     //accumulator A
@@ -986,11 +874,7 @@ public class CPU {
         indexRegister = indexRegister + 1 & 0xFFFF;
 
         // update Z if all 16 bits are 0
-        if (indexRegister == 0){
-            ccr.setZero(true);
-        } else {
-            ccr.setZero(false);
-        }
+        ccr.setZero(indexRegister == 0);
     }
     //Jump
     //extended
@@ -1266,39 +1150,10 @@ public class CPU {
         accumulatorB = memory.read(stackPointer);
     }
     //Rotate Left
-    //accumulator A
-    public void ROLA(){
-
-    }
-    //accumulator B
-    public void ROLB(){
-
-    }
-    //extended
-    public void ROL_EXT(){
-
-    }
-    //indexed
-    public void ROL_IND(){
-
-    }
+    public void ROL(){}
     //Rotate Right
-    //accumulator A
-    public void RORA(){
+    public void ROR(){}
 
-    }
-    //accumulator B
-    public void RORB(){
-
-    }
-    //extended
-    public void ROR_EXT(){
-
-    }
-    //indexed
-    public void ROR_IND(){
-
-    }
     //Return from Interrupt
     public void RTI(){
 
@@ -1312,40 +1167,8 @@ public class CPU {
 
     }
     //Subtract with Carry
-    //accumulator A
-    //immediate
-    public void SBCA_IMM(){
+    public void SBC(){}
 
-    }
-    //direct
-    public void SBCA_DIR(){
-
-    }
-    //extended
-    public void SBCA_EXT(){
-
-    }
-    //indexed
-    public void SBCA_IND(){
-
-    }
-    //accumulator B
-    //immediate
-    public void SBCB_IMM(){
-
-    }
-    //direct
-    public void SBCB_DIR(){
-
-    }
-    //extended
-    public void SBCB_EXT(){
-
-    }
-    //indexed
-    public void SBCB_IND(){
-
-    }
     //Set Carry
     public void SEC(){
         ccr.setCarry(true);
@@ -1359,32 +1182,8 @@ public class CPU {
         ccr.setOverflow(true);
     }
     //Store Accumulator
-    //accumulator A
-    //direct
-    public void STAA_DIR(){
+    public void STA(int accx, int addressingMode){}
 
-    }
-    //extended
-    public void STAA_EXT(){
-
-    }
-    //indexed
-    public void STAA_IND(){
-
-    }
-    //accumulator B
-    //direct
-    public void STAB_DIR(){
-
-    }
-    //extended
-    public void STAB_EXT(){
-
-    }
-    //indexed
-    public void STAB_IND(){
-
-    }
     //Store Stack Pointer
     //direct
     public void STS_DIR(){
@@ -1412,41 +1211,8 @@ public class CPU {
 
     }
     //Subtract
-    //accumulator A
-    //immediate
-    public void SUBA_IMM(){
+    public void SUB(int accx, int addressingMode){}
 
-    }
-    //direct
-    public void SUBA_DIR(){
-
-    }
-    //extended
-    public void SUBA_EXT(){
-
-    }
-    //indexed
-    public void SUBA_IND(){
-
-    }
-    //accumulator B
-    //immediate
-    public void SUBB_IMM(){
-
-    }
-    //direct
-    public void SUBB_DIR(){
-
-    }
-    //extended
-    public void SUBB_EXT(){
-
-
-    }
-    //indexed
-    public void SUBB_IND(){
-        
-    }
     //Software Interrupt
     public void SWI(){
         ccr.setInterrupt(true);
