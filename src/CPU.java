@@ -56,28 +56,28 @@ public class CPU {
             case 0xF9: accumulatorB = ADC(accumulatorB, 2);break;
             case 0xE9: accumulatorB = ADC(accumulatorB, 3);break;
             //:::::::::::::: Add Without Carry
-            case 0x8B: ADDA_IMM();break;
-            case 0x9B: ADDA_DIR();break;
-            case 0xBB: ADDA_EXT();break;
-            case 0xAB: ADDA_IND();break;
-            case 0xCB: ADDB_IMM();break;
-            case 0xDB: ADDB_DIR();break;
-            case 0xFB: ADDB_EXT();break;
-            case 0xEB: ADDB_IND();break;
+            case 0x8B: accumulatorA = ADD(accumulatorA, 0);break;
+            case 0x9B: accumulatorA = ADD(accumulatorA, 1);break;
+            case 0xBB: accumulatorA = ADD(accumulatorA, 2);break;
+            case 0xAB: accumulatorA = ADD(accumulatorA, 3);break;
+            case 0xCB: accumulatorB = ADD(accumulatorB, 0);break;
+            case 0xDB: accumulatorB = ADD(accumulatorB, 1);break;
+            case 0xFB: accumulatorB = ADD(accumulatorB, 2);break;
+            case 0xEB: accumulatorB = ADD(accumulatorB, 3);break;
             //:::::::::::::: Logical And
-            case 0x84: ANDA_IMM();break;
-            case 0x94: ANDA_DIR();break;
-            case 0xB4: ANDA_EXT();break;
-            case 0xA4: ANDA_IND();break;
-            case 0xC4: ANDB_IMM();break;
-            case 0xD4: ANDB_DIR();break;
-            case 0xF4: ANDB_EXT();break;
-            case 0xE4: ANDB_IND();break;
+            case 0x84: accumulatorA = AND(accumulatorA, 0);break;
+            case 0x94: accumulatorA = AND(accumulatorA, 1);break;
+            case 0xB4: accumulatorA = AND(accumulatorA, 2);break;
+            case 0xA4: accumulatorA = AND(accumulatorA, 3);break;
+            case 0xC4: accumulatorB = AND(accumulatorB, 0);break;
+            case 0xD4: accumulatorB = AND(accumulatorB, 1);break;
+            case 0xF4: accumulatorB = AND(accumulatorB, 2);break;
+            case 0xE4: accumulatorB = AND(accumulatorB, 3);break;
             //:::::::::::::: Arithmetic Shift Left
-            case 0x48: ASLA();break;
-            case 0x58: ASLB();break;
-            case 0x78: ASL_EXT();break;
-            case 0x68: ASL_IND();break;
+            case 0x48: ASL('A');break;
+            case 0x58: ASL('B');break;
+            case 0x78: ASL(2);break;
+            case 0x68: ASL(3);break;
             //:::::::::::::: Arithmetic Shift Right
             case 0x47: ASRA();break;
             case 0x57: ASRB();break;
@@ -316,7 +316,25 @@ public class CPU {
         }
     }
 
+    private int getAddress(int addressingMode){
+        int address = 0;
+        // check addressing mode
+        if (addressingMode == 1){
+            //direct
+            address = fetch();
+        } else if (addressingMode == 2){
+            //extended
+            int upperAddress = fetch();
+            int lowerAddress = fetch();
 
+            address = ((upperAddress << 8) | lowerAddress) & 0xFFFF;
+
+        } else if (addressingMode == 3){
+            //indexed
+            address = (indexRegister + fetch()) & 0xFFFF;
+        }
+        return address;
+    }
 
 
     //add accumulator B to accumulator A
@@ -346,27 +364,11 @@ public class CPU {
 
     //Add With Carry
     public int ADC(int accx, int addressingMode){
-        int operand = 0;
-        // check addressing mode
+        int operand;
         if (addressingMode == 0){
-            // immediate
             operand = fetch();
-            System.out.println("here: " + operand);
-        } else if (addressingMode == 1){
-            //direct
-            operand = memory.read(fetch());
-
-        } else if (addressingMode == 2){
-            //extended
-            int upperAddress = fetch();
-            int lowerAddress = fetch();
-
-            int address = ((upperAddress << 8) | lowerAddress) & 0xFFFF;
-            operand = memory.read(address);
-        } else if (addressingMode == 3){
-            //indexed
-            int address = indexRegister + fetch() & 0xFFFF;
-            operand = memory.read(address);
+        } else {
+            operand = memory.read(getAddress(addressingMode));
         }
 
         int res = accx + operand;
@@ -393,275 +395,78 @@ public class CPU {
 
     //Add Without Carry
     public int ADD(int accx, int addressingMode){
-        return 0;
-    }
-    //accumulator A
-    //immediate
-    public void ADDA_IMM(){
-
-        // if immediate (data = @ fetch())
-        // if dir, memory.read(@fetch())
-        // if extended memory.read(upper + lower)
-        // if indexed memory.read(indexRegister + fetch())
-
-
-        int operand = fetch();
-        int res = accumulatorA + operand & 0xFF;
-
-    }
-    //direct
-    public void ADDA_DIR(){
-
-    }
-    //extended
-    public void ADDA_EXT(){
-
-    }
-    //indexed
-    public void ADDA_IND(){
-
-    }
-    //accumulator B
-    //immediate
-    public void ADDB_IMM() {
-
-    }
-    //direct
-    public void ADDB_DIR(){
-
-    }
-    //extended
-    public void ADDB_EXT(){
-
-    }
-    //indexed
-    public void ADDB_IND(){
-
-    }
-    //logical AND
-    //accumulator A
-    public void ANDA_IMM() {
-        // get immediate value
-        int operand = fetch();
-        accumulatorA = accumulatorA & operand;
-
-        // check if MSB is set
-        ccr.setNegative((accumulatorA & 0x80) != 0);
-        // check if all 0
-        ccr.setZero((accumulatorA & 0xFF) == 0);
-        // reset overflow
-        ccr.setOverflow(false);
-    }
-
-    //direct addressing
-    public void ANDA_DIR() {
-        int address = fetch();
-        int operand = memory.read(address);
-
-        accumulatorA = accumulatorA & operand;
-
-        // check if MSB is set
-        ccr.setNegative((accumulatorA & 0x80) != 0);
-        // check if all 0
-        ccr.setZero((accumulatorA & 0xFF) == 0);
-        // reset overflow
-        ccr.setOverflow(false);
-    }
-
-    //extended addressing
-    public void ANDA_EXT() {
-        int upperAddress = fetch();
-        int lowerAddress = fetch();
-
-        // shift by 8 to move
-        int address = upperAddress << 8 | lowerAddress;
-        int operand = memory.read(address);
-
-        accumulatorA = accumulatorA & operand;
-
-        // check if MSB is set
-        ccr.setNegative((accumulatorA & 0x80) != 0);
-        // check if all 0
-        ccr.setZero((accumulatorA & 0xFF) == 0);
-        // reset overflow
-        ccr.setOverflow(false);
-    }
-
-    //indexed addressing
-    public void ANDA_IND() {
-        int address = fetch() + indexRegister;
-        int operand = memory.read(address);
-
-        accumulatorA = accumulatorA & operand;
-
-        // check if MSB is set
-        ccr.setNegative((accumulatorA & 0x80) != 0);
-        // check if all 0
-        ccr.setZero((accumulatorA & 0xFF) == 0);
-        // reset overflow
-        ccr.setOverflow(false);
-    }
-
-    //accumulator B
-    //immediate addressing
-    public void ANDB_IMM() {
-        // get immediate value
-        int operand = fetch();
-        accumulatorB = accumulatorB & operand;
-
-        // check if MSB is set
-        ccr.setNegative((accumulatorB & 0x80) != 0);
-        // check if all 0
-        ccr.setZero((accumulatorB & 0xFF) == 0);
-        // reset overflow
-        ccr.setOverflow(false);
-    }
-
-    //direct addressing
-    public void ANDB_DIR() {
-        int address = fetch();
-        int operand = memory.read(address);
-
-        accumulatorB = accumulatorB & operand;
-
-        // check if MSB is set
-        ccr.setNegative((accumulatorB & 0x80) != 0);
-        // check if all 0
-        ccr.setZero((accumulatorB & 0xFF) == 0);
-        // reset overflow
-        ccr.setOverflow(false);
-    }
-
-    //extended addressing
-    public void ANDB_EXT() {
-        int upperAddress = fetch();
-        int lowerAddress = fetch();
-
-        // shift by 8 to move
-        int address = upperAddress << 8 | lowerAddress;
-        int operand = memory.read(address);
-
-        accumulatorB = accumulatorB & operand;
-
-        // check if MSB is set
-        ccr.setNegative((accumulatorB & 0x80) != 0);
-        // check if all 0
-        ccr.setZero((accumulatorB & 0xFF) == 0);
-        // reset overflow
-        ccr.setOverflow(false);
-
-    }
-
-    //indexed addressing
-    public void ANDB_IND() {
-        int address = fetch() + indexRegister;
-        int operand = memory.read(address);
-
-        accumulatorB = accumulatorB & operand;
-
-        // check if MSB is set
-        ccr.setNegative((accumulatorB & 0x80) != 0);
-        // check if all 0
-        ccr.setZero((accumulatorB & 0xFF) == 0);
-        // reset overflow
-        ccr.setOverflow(false);
-    }
-
-    //Arithmetic Shift Left
-    //accumulator A
-    public void ASLA() {
-        int res = accumulatorA << 1;
-
-        // set if it was set before the operation
-        ccr.setCarry((accumulatorA & 0x80) != 0);
-        // put result back in accumulator
-        accumulatorA = res & 0xFF;
-
-        // check negative
-        ccr.setNegative((res & 0x80) != 0);
-        // check zero
-        ccr.setZero((res & 0xFF) == 0);
-        // check overflow
-        if ((ccr.getNegative() && !ccr.getCarry()) || (!ccr.getNegative() && ccr.getCarry())) {
-            ccr.setOverflow(true);
+        int operand;
+        if (addressingMode == 0){
+            operand = fetch();
         } else {
-            ccr.setOverflow(false);
+            operand = memory.read(getAddress(addressingMode));
         }
-
-    }
-
-    // accumulator B
-    public void ASLB() {
-        int res = accumulatorB << 1;
-
-        // set if it was set before the operation
-        ccr.setCarry((accumulatorB & 0x80) != 0);
-        // put result back in accumulator
-        accumulatorB = res & 0xFF;
-
-        // check negative
-        ccr.setNegative((res & 0x80) != 0);
-        // check zero
-        ccr.setZero((res & 0xFF) == 0);
-        // check overflow
-        if ((ccr.getNegative() && !ccr.getCarry()) || (!ccr.getNegative() && ccr.getCarry())) {
-            ccr.setOverflow(true);
-        } else {
-            ccr.setOverflow(false);
-        }
-    }
-
-    //extended addressing
-    public void ASL_EXT() {
-        int upperAddress = fetch();
-        int lowerAddress = fetch();
-        //combine 2 8-bit addresses
-        int address = (upperAddress << 8) | lowerAddress;
-        // get value to be shifted
-        int operand = memory.read(address);
-        // shift one spot into res
-        int res = operand << 1;
-        // set if it was set before the operation
-        ccr.setCarry((operand & 0x80) != 0);
-        // cap res @ 8-bits
+        int res = accx + operand;
         res = res & 0xFF;
 
+        boolean X3 = (accx & 0x08) != 0;
+        boolean M3 = (operand & 0x08) != 0;
+        boolean R3 = (res & 0x08) != 0;
+
+        //set halfCarry
+        ccr.setHalfCarry((X3 & M3) || (M3 & !R3) || (!R3 & X3));
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setZero(res == 0);
+
+        boolean X7 = (accx & 0x80) != 0;
+        boolean M7 = (operand & 0x80) != 0;
+        boolean R7 = (res & 0x80) != 0;
+        ccr.setOverflow((X7 & M7 & !R7) || (!X7 & !M7 & R7));
+        ccr.setCarry((X7 & M7) || (M7 & !R7) || (!R7 & X7));
+
+        return res;
+    }
+
+    //Logical AND
+    public int AND(int accx, int addressingMode){
+        int operand;
+        if (addressingMode == 0){
+            operand = fetch();
+        } else {
+            operand = memory.read(getAddress(addressingMode));
+        }
+
+        int res = (accx & operand) & 0xFF;
+
+        // check if MSB is set
+        ccr.setNegative((res & 0x80) != 0);
+        // check if all 0
+        ccr.setZero(res == 0);
+        // reset overflow
+        ccr.setOverflow(false);
+
+        return res;
+    }
+    //Arithmetic Shift Left
+    public void ASL(int addressingMode){
+        int res;
+        if (addressingMode == 'A'){
+            res = (accumulatorA << 1) & 0xFF;
+            ccr.setCarry((accumulatorA & 0x80) != 0);
+            accumulatorA = res;
+        } else if (addressingMode == 'B'){
+            res  = (accumulatorB << 1) & 0xFF;
+            ccr.setCarry((accumulatorB & 0x80) != 0);
+            accumulatorB = res;
+        } else {
+            int address = getAddress(addressingMode);
+            int operand = memory.read(address);
+            ccr.setCarry((operand & 0x80) != 0);
+            res = (operand << 1) & 0xFF;
+            memory.write(address, (byte)res);
+        }
+
         // check negative
         ccr.setNegative((res & 0x80) != 0);
         // check zero
-        ccr.setZero((res & 0xFF) == 0);
+        ccr.setZero(res == 0);
         // check overflow
         ccr.setOverflow((ccr.getNegative() && !ccr.getCarry()) || (!ccr.getNegative() && ccr.getCarry()));
-
-        // write back
-        memory.write(address, (byte) (res & 0xFF));
-    }
-
-    //indexed addressing
-    public void ASL_IND() {
-        int address = fetch() + indexRegister;
-
-        int operand = memory.read(address);
-        // shift one spot into res
-        int res = operand << 1;
-        // set if it was set before the operation
-        ccr.setCarry((operand & 0x80) != 0);
-        // cap res @ 8-bits
-        res = res & 0xFF;
-
-        // check negative
-        ccr.setNegative((res & 0x80) != 0);
-        // check zero
-        ccr.setZero((res & 0xFF) == 0);
-        // check overflow
-        if ((ccr.getNegative() && !ccr.getCarry()) || (!ccr.getNegative() && ccr.getCarry())) {
-            ccr.setOverflow(true);
-        } else {
-            ccr.setOverflow(false);
-        }
-
-        // write back
-        memory.write(address, (byte) (res & 0xFF));
     }
 
     //Arithmetic Shift Right

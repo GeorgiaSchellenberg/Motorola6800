@@ -4,10 +4,10 @@ public class Main {
         System.out.println("PC: " + c.programCounter);
         System.out.println("SP: " + c.stackPointer);
         System.out.println(c.accumulatorA);
-
-        c.memory.write(0, (byte)0x89);
+        c.accumulatorA = 0xA9;
+        c.memory.write(0, (byte)0x84);
         // A, immediate
-        c.memory.write(1, (byte) 0x04);
+        c.memory.write(1, (byte) 0x0F);
         c.step();
 
         System.out.println("PC: " + c.programCounter);
