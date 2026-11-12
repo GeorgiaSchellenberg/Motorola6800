@@ -228,7 +228,7 @@ public class CPU {
             case 0x37: PSHB();break;
             //:::::::::::::: Pull Data from Stack
             case 0x32: PULA();break;
-            case 0x33: PULAB();break;
+            case 0x33: PULB();break;
             //:::::::::::::: Rotate Left
             case 0x49: ROLA();break;
             case 0x59: ROLB();break;
@@ -283,7 +283,7 @@ public class CPU {
             case 0xC0: SUBB_IMM();break;
             case 0xD0: SUBB_DIR();break;
             case 0xF0: SUBB_EXT();break;
-            case 0xE0: SUBB_IMD();break;
+            case 0xE0: SUBB_IND();break;
             //:::::::::::::: Software Interrupt
             case 0x3F: SWI();break;
             //:::::::::::::: Transfer from Accumulator A to Accumulator B
@@ -1584,4 +1584,68 @@ public class CPU {
     public void SUBB_IND(){
         
     }
+    //Software Interrupt
+    public void SWI(){
+
+    }
+    //Transfer from Accumulator A to Accumulator B
+    public void TAB(){
+
+    }
+    //Transfer from Accumulator A to CCR
+    public void TAP(){
+
+    }
+    //Transfer from Accumulator B to Accumulator A
+    public void TBA(){
+
+    }
+    //Transfer from CCR to accumulator A
+    public void TPA(){
+
+    }
+    //Test
+    //accumulator A
+    public void TSTA(){
+
+    }
+    //accumulator B
+    public void TSTB(){
+
+    }
+    //extended
+    public void TST_EXT(){
+
+    }
+    //indexed
+    public void TST_IND(){
+
+    }
+    //Transfer from Stack Pointer to Index Register
+    public void TSX(){
+
+    }
+    //Transfer from Index Register to Stack Pointer
+    public void TXS(){
+
+    }
+    //Wait for Interrupt
+    public void WAI(){
+        //increment PC
+        //push pcl
+        //dec sp
+        //push pch
+        //dec sp
+        //push ixl
+        //dec sp
+        //push ixh
+        //dec sp
+        //acca
+        //dec sp
+        //accb
+        //dec sp
+        //cc
+        //dec sp
+    }
+
 }
