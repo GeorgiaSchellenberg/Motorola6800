@@ -47,14 +47,14 @@ public class CPU {
             //:::::::::::::: Add Accumulators
             case 0x1B: ABA();break;
             //:::::::::::::: Add With Carry
-            case 0x89: ADCA_IMM();break;
-            case 0x99: ADCA_DIR();break;
-            case 0xB9: ADCA_EXT();break;
-            case 0xA9: ADCA_IND();break;
-            case 0xC9: ADCB_IMM();break;
-            case 0xD9: ADCB_DIR();break;
-            case 0xF9: ADCB_EXT();break;
-            case 0xE9: ADCB_IND();break;
+            case 0x89: accumulatorA = ADC(accumulatorA, 0);break;
+            case 0x99: accumulatorA = ADC(accumulatorA, 1);break;
+            case 0xB9: accumulatorA = ADC(accumulatorA,2);break;
+            case 0xA9: accumulatorA = ADC(accumulatorA, 3);break;
+            case 0xC9: accumulatorB = ADC(accumulatorB, 0);break;
+            case 0xD9: accumulatorB = ADC(accumulatorB, 1);break;
+            case 0xF9: accumulatorB = ADC(accumulatorB, 2);break;
+            case 0xE9: accumulatorB = ADC(accumulatorB, 3);break;
             //:::::::::::::: Add Without Carry
             case 0x8B: ADDA_IMM();break;
             case 0x9B: ADDA_DIR();break;
@@ -316,7 +316,6 @@ public class CPU {
         }
     }
 
-    //execute
 
 
 
@@ -346,64 +345,68 @@ public class CPU {
     }
 
     //Add With Carry
-    //accumulator A
-    //immediate
-    public void ADCA_IMM() {
-        int operand = fetch();
-        int res = accumulatorA + operand;
+    public int ADC(int accx, int addressingMode){
+        int operand = 0;
+        // check addressing mode
+        if (addressingMode == 0){
+            // immediate
+            operand = fetch();
+            System.out.println("here: " + operand);
+        } else if (addressingMode == 1){
+            //direct
+            operand = memory.read(fetch());
+
+        } else if (addressingMode == 2){
+            //extended
+            int upperAddress = fetch();
+            int lowerAddress = fetch();
+
+            int address = ((upperAddress << 8) | lowerAddress) & 0xFFFF;
+            operand = memory.read(address);
+        } else if (addressingMode == 3){
+            //indexed
+            int address = indexRegister + fetch() & 0xFFFF;
+            operand = memory.read(address);
+        }
+
+        int res = accx + operand;
         //if carry true, increment result
         if (ccr.getCarry()) res ++;
         res = res & 0xFF;
 
-        boolean A3 = (accumulatorA & 0x08) != 0;
+        boolean X3 = (accx & 0x08) != 0;
         boolean M3 = (operand & 0x08) != 0;
         boolean R3 = (res & 0x08) != 0;
 
-        //set halfcarry
-        ccr.setHalfCarry((A3 & M3) || (M3 & !R3) || (!R3 & A3));
+        //set halfCarry
+        ccr.setHalfCarry((X3 & M3) || (M3 & !R3) || (!R3 & X3));
         ccr.setNegative((res & 0x80) != 0);
         ccr.setZero(res == 0);
 
-        boolean A7 = (accumulatorA & 0x80) != 0;
+        boolean X7 = (accx & 0x80) != 0;
         boolean M7 = (operand & 0x80) != 0;
         boolean R7 = (res & 0x80) != 0;
-        ccr.setOverflow((A7 & M7 & !R7) || (!A7 & !M7 & R7));
-        ccr.setCarry((A7 & M7) || (M7 & !R7) || (!R7 & A7));
-        accumulatorA = res;
+        ccr.setOverflow((X7 & M7 & !R7) || (!X7 & !M7 & R7));
+        ccr.setCarry((X7 & M7) || (M7 & !R7) || (!R7 & X7));
+        return res;
     }
-    //direct
-    public void ADCA_DIR(){
 
-    }
-    //extended
-    public void ADCA_EXT(){
-
-    }
-    //indexed
-    public void ADCA_IND(){
-
-    }
-    //accumulator B
-    //immediate
-    public void ADCB_IMM(){
-
-    }
-    //direct
-    public void ADCB_DIR(){
-
-    }
-    //extended
-    public void ADCB_EXT(){
-
-    }
-    //indexed
-    public void ADCB_IND(){
-
-    }
     //Add Without Carry
+    public int ADD(int accx, int addressingMode){
+        return 0;
+    }
     //accumulator A
     //immediate
     public void ADDA_IMM(){
+
+        // if immediate (data = @ fetch())
+        // if dir, memory.read(@fetch())
+        // if extended memory.read(upper + lower)
+        // if indexed memory.read(indexRegister + fetch())
+
+
+        int operand = fetch();
+        int res = accumulatorA + operand & 0xFF;
 
     }
     //direct
@@ -628,11 +631,7 @@ public class CPU {
         // check zero
         ccr.setZero((res & 0xFF) == 0);
         // check overflow
-        if ((ccr.getNegative() && !ccr.getCarry()) || (!ccr.getNegative() && ccr.getCarry())) {
-            ccr.setOverflow(true);
-        } else {
-            ccr.setOverflow(false);
-        }
+        ccr.setOverflow((ccr.getNegative() && !ccr.getCarry()) || (!ccr.getNegative() && ccr.getCarry()));
 
         // write back
         memory.write(address, (byte) (res & 0xFF));
