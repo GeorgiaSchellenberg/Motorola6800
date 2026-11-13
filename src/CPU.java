@@ -28,7 +28,7 @@ public class CPU {
         //retrieve instruction from memory;
         int instruction = fetch();
         //decode and execute
-        System.out.println(instruction);
+        System.out.println("Instruction: " + instruction);
         decoder(instruction);
     }
 
@@ -36,6 +36,7 @@ public class CPU {
     //fetch - grabs next byte from memory and increments PC
     public int fetch() {
         // read instruction from memory
+        System.out.println("Program Counter: " + programCounter);
         int data = memory.read(programCounter);
         // increment program counter
         programCounter++;
@@ -43,6 +44,7 @@ public class CPU {
     }
     //decode
     public void decoder(int opcode){
+        System.out.println("OPCODE: " + opcode);
         switch(opcode) {
             //:::::::::::::: Add Accumulators
             case 0x1B: ABA();break;
@@ -238,15 +240,15 @@ public class CPU {
             case 0x32: PULA();break;
             case 0x33: PULB();break;
             //:::::::::::::: Rotate Left
-            case 0x49: ROLA();break;
-            case 0x59: ROLB();break;
-            case 0x79: ROL_EXT();break;
-            case 0x69: ROL_IND();break;
-            //:::::::::::::: Rotate Right
-            case 0x46: RORA();break;
-            case 0x56: RORB();break;
-            case 0x76: ROR_EXT();break;
-            case 0x66: ROR_IND();break;
+//            case 0x49: ROLA();break;
+//            case 0x59: ROLB();break;
+//            case 0x79: ROL_EXT();break;
+//            case 0x69: ROL_IND();break;
+//            //:::::::::::::: Rotate Right
+//            case 0x46: RORA();break;
+//            case 0x56: RORB();break;
+//            case 0x76: ROR_EXT();break;
+//            case 0x66: ROR_IND();break;
             //:::::::::::::: Return from Interrupt
             case 0x3B: RTI();break;
             //:::::::::::::: Return from Subroutine
@@ -254,14 +256,14 @@ public class CPU {
             //:::::::::::::: Subtract Accumulators
             case 0x10: SBA();break;
             //:::::::::::::: Subtract with Carry
-            case 0x82: SBCA_IMM();break;
-            case 0x92: SBCA_DIR();break;
-            case 0xB2: SBCA_EXT();break;
-            case 0xA2: SBCA_IND();break;
-            case 0xC2: SBCB_IMM();break;
-            case 0xD2: SBCB_DIR();break;
-            case 0xF2: SBCB_EXT();break;
-            case 0xE2: SBCB_IND();break;
+//            case 0x82: SBCA_IMM();break;
+//            case 0x92: SBCA_DIR();break;
+//            case 0xB2: SBCA_EXT();break;
+//            case 0xA2: SBCA_IND();break;
+//            case 0xC2: SBCB_IMM();break;
+//            case 0xD2: SBCB_DIR();break;
+//            case 0xF2: SBCB_EXT();break;
+//            case 0xE2: SBCB_IND();break;
             //:::::::::::::: Set Carry
             case 0x0D: SEC();break;
             //:::::::::::::: Set Interrupt Mask
@@ -269,12 +271,12 @@ public class CPU {
             //:::::::::::::: Set Two's Complement Overflow Bit
             case 0x0B: SEV();break;
             //:::::::::::::: Store Accumulator
-            case 0x97: STAA_DIR();break;
-            case 0xB7: STAA_EXT();break;
-            case 0xA7: STAA_IND();break;
-            case 0xD7: STAB_DIR();break;
-            case 0xF7: STAB_EXT();break;
-            case 0xE7: STAB_IND();break;
+//            case 0x97: STAA_DIR();break;
+//            case 0xB7: STAA_EXT();break;
+//            case 0xA7: STAA_IND();break;
+//            case 0xD7: STAB_DIR();break;
+//            case 0xF7: STAB_EXT();break;
+//            case 0xE7: STAB_IND();break;
             //:::::::::::::: Store Stack Pointer
             case 0x9F: STS_DIR();break;
             case 0xBF: STS_EXT();break;
@@ -284,14 +286,14 @@ public class CPU {
             case 0xFF: STX_EXT();break;
             case 0xEF: STX_IND();break;
             //:::::::::::::: Subtract
-            case 0x80: SUBA_IMM();break;
-            case 0x90: SUBA_DIR();break;
-            case 0xB0: SUBA_EXT();break;
-            case 0xA0: SUBA_IND();break;
-            case 0xC0: SUBB_IMM();break;
-            case 0xD0: SUBB_DIR();break;
-            case 0xF0: SUBB_EXT();break;
-            case 0xE0: SUBB_IND();break;
+//            case 0x80: SUBA_IMM();break;
+//            case 0x90: SUBA_DIR();break;
+//            case 0xB0: SUBA_EXT();break;
+//            case 0xA0: SUBA_IND();break;
+//            case 0xC0: SUBB_IMM();break;
+//            case 0xD0: SUBB_DIR();break;
+//            case 0xF0: SUBB_EXT();break;
+//            case 0xE0: SUBB_IND();break;
             //:::::::::::::: Software Interrupt
             case 0x3F: SWI();break;
             //:::::::::::::: Transfer from Accumulator A to Accumulator B
