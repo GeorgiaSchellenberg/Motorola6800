@@ -741,37 +741,32 @@ public class CPU {
         ccr.setCarry((!X7 && M7) || (M7 && R7) || (R7 && !X7));
     }
     //Complement
-    //accumulator A
-    public void COMA(){
+    public void COM(int addressingMode){
+        int res;
+        if (addressingMode == 'A'){
+            accumulatorA = ~accumulatorA & 0xFF;
+            res = accumulatorA;
+        } else if (addressingMode == 'B'){
+            accumulatorB = ~accumulatorB & 0xFF;
+            res = accumulatorB;
+        } else {
+            int address = getAddress(addressingMode);
+            int operand = memory.read(address);
+            operand = ~operand & 0xFF;
+            res = operand;
+            memory.write(address, (byte) operand);
+        }
 
-    }
-    //accumulator B
-    public void COMB(){
-
-    }
-    //extended
-    public void COM_EXT(){
-
-    }
-    //indexed
-    public void COM_IND(){
-
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setZero(res == 0);
+        ccr.setOverflow(false);
+        ccr.setCarry(true);
     }
     //Compare Index Register
-    //immediate
-    public void CPX_IMM(){
+    public void CPX(int addressingMode){
+        int address = getAddress(addressingMode);
 
-    }
-    //direct
-    public void CPX_DIR(){
-
-    }
-    //extended
-    public void CPX_EXT(){
-
-    }
-    //indexed
-    public void CPX_IND(){
+        int operand = memory.read(address);
 
     }
     //Decimal Adjust ACCA
