@@ -1173,8 +1173,8 @@ public class CPU {
     public void RTI(){
         stackPointer = (stackPointer + 1) & 0xFFFF;
         // restore condition codes
-        int conditionCodeRegister = memory.read(stackPointer);
-        //ccr.setState(ccr); --> implement this
+        int c = memory.read(stackPointer);
+        ccr.setState(c);
         stackPointer = (stackPointer + 1) & 0xFFFF;
         // acca
         accumulatorA = memory.read(stackPointer);
@@ -1199,14 +1199,57 @@ public class CPU {
     }
     //Return from Subroutine
     public void RTS(){
+        stackPointer = (stackPointer + 1) & 0xFFFF;
+        int PCH = memory.read(stackPointer);
+        stackPointer = (stackPointer + 1) & 0xFFFF;
+        int PCL = memory.read(stackPointer);
 
+        programCounter = (PCH << 8 | PCL) & 0xFFFF;
     }
     //Subtract Accumulator
     public void SBA(){
+        int res  = (accumulatorA - accumulatorB) & 0xFF;
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setZero(res == 0);
 
+        boolean A7 = (accumulatorA & 0x80) != 0;
+        boolean B7 = (accumulatorB & 0x80) != 0;
+        boolean R7 = (res & 0x80) != 0;
+
+        ccr.setOverflow((A7 && !B7 && !R7) || (!A7 && B7 && R7));
+        ccr.setCarry((!A7 && B7) || (B7 && R7) || (R7 && !A7));
+        accumulatorA = res;
     }
     //Subtract with Carry
-    public void SBC(){}
+    public void SBC(int accx, int addressingMode){
+        int operand;
+        int res;
+        if (addressingMode == 0){
+            operand = fetch() & 0xFF;
+        } else {
+            int address = getAddress(addressingMode);
+            operand = memory.read(address) & 0xFF;
+        }
+
+        if (accx == 'A'){
+            res = (accumulatorA - operand) & 0xFF;
+            if (ccr.getCarry()){
+                res = (res - 1) & 0xFF;
+            }
+            // set ccr
+            accumulatorA = res;
+        } else {
+            res = (accumulatorB - operand) & 0xFF;
+            if (ccr.getCarry()){
+                res = (res - 1) & 0xFF;
+            }
+            // set ccr
+            accumulatorB = res;
+        }
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setZero(res == 0);
+
+    }
 
     //Set Carry
     public void SEC(){
@@ -1221,7 +1264,21 @@ public class CPU {
         ccr.setOverflow(true);
     }
     //Store Accumulator
-    public void STA(int accx, int addressingMode){}
+    public void STA(int accx, int addressingMode){
+        int address = getAddress(addressingMode);
+
+        if (accx == 'A'){
+            memory.write(address, (byte) accumulatorA);
+            ccr.setNegative((accumulatorA & 0x80) != 0);
+            ccr.setZero(accumulatorA == 0);
+        } else {
+            memory.write(address, (byte) accumulatorB);
+            ccr.setNegative((accumulatorB & 0x80) != 0);
+            ccr.setZero(accumulatorB == 0);
+        }
+
+        ccr.setOverflow(false);
+    }
 
     //Store Stack Pointer
     //direct
