@@ -78,4 +78,12 @@ public class ConditionCodeRegister {
                 negative + " Z: " + zero + " I: " + interrupt + " H: " + halfCarry);
     }
 
+    public void setState(int c){
+        this.carry = ((c & 0x01)  != 0);
+        this.overflow = ((c & 0x02)  != 0);
+        this.zero = ((c & 0x04)  != 0);
+        this.negative = ((c & 0x08)  != 0);
+        this.interrupt = ((c & 0x10)  != 0);
+        this.halfCarry = ((c & 0x20)  != 0);
+    }
 }

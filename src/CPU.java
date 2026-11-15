@@ -148,107 +148,107 @@ public class CPU {
             case 0xD1: CMP('B', 1);break;
             case 0xF1: CMP('B', 2);break;
             case 0xE1: CMP('B', 3);break;
-            //:::::::::::::: Complement **** I STOPPED HERE ****
-            case 0x43: COMA();break;
-            case 0x53: COMB();break;
-            case 0x73: COM_EXT();break;
-            case 0x63: COM_IND();break;
-            //:::::::::::::: Compare Index Register
-            case 0x8C: CPX_IMM();break;
-            case 0x9C: CPX_DIR();break;
-            case 0xBC: CPX_EXT();break;
-            case 0xAC: CPX_IND();break;
-            //:::::::::::::: Decimal Adjust ACCA
+            //:::::::::::::: Complement
+            case 0x43: COM('A');break;
+            case 0x53: COM('B');break;
+            case 0x73: COM(2);break;
+            case 0x63: COM(3);break;
+            //:::::::::::::: Compare Index Register NOT DONE
+            case 0x8C: CPX(0);break;
+            case 0x9C: CPX(1);break;
+            case 0xBC: CPX(2);break;
+            case 0xAC: CPX(3);break;
+            //:::::::::::::: Decimal Adjust ACCA NOT DONE
             case 0x19: DAA();break;
-            //:::::::::::::: Decrement
-            case 0x4A: DECA();break;
-            case 0x5A: DECB();break;
-            case 0x7A: DEC_EXT();break;
-            case 0x6A: DEC_IND();break;
+            //:::::::::::::: Decrement done
+            case 0x4A: DEC('A');break;
+            case 0x5A: DEC('B');break;
+            case 0x7A: DEC(2);break;
+            case 0x6A: DEC(3);break;
             //:::::::::::::: Decrement Stack Pointer
             case 0x34: DES();break;
             //:::::::::::::: Decrement Index Register
             case 0x09: DEX();break;
             //:::::::::::::: Exclusive OR
-            case 0x88: EORA_IMM();break;
-            case 0x98: EORA_DIR();break;
-            case 0xB8: EORA_EXT();break;
-            case 0xA8: EORA_IND();break;
-            case 0xC8: EORB_IMM();break;
-            case 0xD8: EORB_DIR();break;
-            case 0xF8: EORB_EXT();break;
-            case 0xE8: EORB_IND();break;
+            case 0x88: EOR('A', 0);break;
+            case 0x98: EOR('A', 1);break;
+            case 0xB8: EOR('A', 2);break;
+            case 0xA8: EOR('A', 3);break;
+            case 0xC8: EOR('B', 0);break;
+            case 0xD8: EOR('B', 1);break;
+            case 0xF8: EOR('B', 2);break;
+            case 0xE8: EOR('B', 3);break;
             //:::::::::::::: Increment
-            case 0x4C: INCA();break;
-            case 0x5C: INCB();break;
-            case 0x7C: INC_EXT();break;
-            case 0x6C: INC_IND();break;
+            case 0x4C: INC('A');break;
+            case 0x5C: INC('B');break;
+            case 0x7C: INC(2);break;
+            case 0x6C: INC(3);break;
             //:::::::::::::: Increment Stack Pointer
             case 0x31: INS();break;
             //:::::::::::::: Increment Index Register
             case 0x08: INX();break;
             //:::::::::::::: Jump
-            case 0x7E: JMP_EXT();break;
-            case 0x6E: JMP_IND();break;
+            case 0x7E: JMP(2);break;
+            case 0x6E: JMP(3);break;
             //:::::::::::::: Jump to Subroutine
-            case 0xBD: JSR_EXT();break;
-            case 0xAD: JSR_IND();break;
+            case 0xBD: JSR(2);break;
+            case 0xAD: JSR(3);break;
             //:::::::::::::: Load Accumulator
-            case 0x86: LDAA_IMM();break;
-            case 0x96: LDAA_DIR();break;
-            case 0xB6: LDAA_EXT();break;
-            case 0xA6: LDAA_IND();break;
-            case 0xC6: LDAB_IMM();break;
-            case 0xD6: LDAB_DIR();break;
-            case 0xF6: LDAB_EXT();break;
-            case 0xE6: LDAB_IND();break;
+            case 0x86: LDA('A', 0);break;
+            case 0x96: LDA('A', 1);break;
+            case 0xB6: LDA('A', 2);break;
+            case 0xA6: LDA('A', 3);break;
+            case 0xC6: LDA('B', 0);break;
+            case 0xD6: LDA('B', 1);break;
+            case 0xF6: LDA('B', 2);break;
+            case 0xE6: LDA('B', 3);break;
             //:::::::::::::: Load Stack Pointer
-            case 0x8E: LDS_IMM();break;
-            case 0x9E: LDS_DIR();break;
-            case 0xBE: LDS_EXT();break;
-            case 0xAE: LDS_IND();break;
+            case 0x8E: LDS(0);break;
+            case 0x9E: LDS(1);break;
+            case 0xBE: LDS(2);break;
+            case 0xAE: LDS(3);break;
             //:::::::::::::: Load Index Register
-            case 0xCE: LDX_IMM();break;
-            case 0xDE: LDX_DIR();break;
-            case 0xFE: LDX_EXT();break;
-            case 0xEE: LDX_IND();break;
+            case 0xCE: LDX(0);break;
+            case 0xDE: LDX(1);break;
+            case 0xFE: LDX(2);break;
+            case 0xEE: LDX(3);break;
             //:::::::::::::: Logical Shift Right
-            case 0x44: LSRA();break;
-            case 0x54: LSRB();break;
-            case 0x74: LSR_EXT();break;
-            case 0x64: LSR_IND();break;
+            case 0x44: LSR('A');break;
+            case 0x54: LSR('B');break;
+            case 0x74: LSR(2);break;
+            case 0x64: LSR(3);break;
             //:::::::::::::: Negate
-            case 0x40: NEGA();break;
-            case 0x50: NEGB();break;
-            case 0x70: NEG_EXT();break;
-            case 0x60: NEG_IND();break;
+            case 0x40: NEG('A');break;
+            case 0x50: NEG('B');break;
+            case 0x70: NEG(2);break;
+            case 0x60: NEG(3);break;
             //:::::::::::::: No Operation
             case 0x01: NOP();break;
             //:::::::::::::: Inclusive OR
-            case 0x8A: ORAA_IMM();break;
-            case 0x9A: ORAA_DIR();break;
-            case 0xBA: ORAA_EXT();break;
-            case 0xAA: ORAA_IND();break;
-            case 0xCA: ORAB_IMM();break;
-            case 0xDA: ORAB_DIR();break;
-            case 0xFA: ORAB_EXT();break;
-            case 0xEA: ORAB_IND();break;
+            case 0x8A: ORA('A', 0);break;
+            case 0x9A: ORA('A', 1);break;
+            case 0xBA: ORA('A', 2);break;
+            case 0xAA: ORA('A', 3);break;
+            case 0xCA: ORA('B', 0);break;
+            case 0xDA: ORA('B', 1);break;
+            case 0xFA: ORA('B', 2);break;
+            case 0xEA: ORA('B', 3);break;
             //:::::::::::::: Push Data Onto Stack
-            case 0x36: PSHA();break;
-            case 0x37: PSHB();break;
+            case 0x36: PSH('A');break;
+            case 0x37: PSH('B');break;
             //:::::::::::::: Pull Data from Stack
-            case 0x32: PULA();break;
-            case 0x33: PULB();break;
+            case 0x32: PUL('A');break;
+            case 0x33: PUL('B');break;
             //:::::::::::::: Rotate Left
-//            case 0x49: ROLA();break;
-//            case 0x59: ROLB();break;
-//            case 0x79: ROL_EXT();break;
-//            case 0x69: ROL_IND();break;
-//            //:::::::::::::: Rotate Right
-//            case 0x46: RORA();break;
-//            case 0x56: RORB();break;
-//            case 0x76: ROR_EXT();break;
-//            case 0x66: ROR_IND();break;
+            case 0x49: ROL('A');break;
+            case 0x59: ROL('B');break;
+            case 0x79: ROL(2);break;
+            case 0x69: ROL(3);break;
+            //:::::::::::::: Rotate Right
+            case 0x46: ROR('A');break;
+            case 0x56: ROR('B');break;
+            case 0x76: ROR(2);break;
+            case 0x66: ROR(3);break;
             //:::::::::::::: Return from Interrupt
             case 0x3B: RTI();break;
             //:::::::::::::: Return from Subroutine
@@ -499,48 +499,44 @@ public class CPU {
         // check overflow
         ccr.setOverflow((ccr.getNegative() && !ccr.getCarry()) || (!ccr.getNegative() && ccr.getCarry()));
     }
-
     //Branch if Carry Clear
     public void BCC() {
         // fetch offset
         int offset = fetch();
-        // convert to signed 7-bit integer
+        // convert to signed integer
         byte signedOffset = (byte) offset;
 
         // only branch if C is clear
         if (!ccr.getCarry()) {
-            programCounter = programCounter + signedOffset;
+            programCounter = (programCounter + signedOffset) & 0xFFFF;
 
         }
     }
-
     //Branch if Carry Set
     public void BCS() {
         // fetch offset
         int offset = fetch();
-        // convert to signed 7-bit integer
+        // convert to signed integer
         byte signedOffset = (byte) offset;
 
         // only branch if C is set
         if (ccr.getCarry()) {
-            programCounter = programCounter + signedOffset;
+            programCounter = (programCounter + signedOffset) & 0xFFFF;
 
         }
     }
-
     //Branch if Equal
     public void BEQ() {
         // fetch offset
         int offset = fetch();
-        // convert to signed 7-bit integer
+        // convert to signed integer
         byte signedOffset = (byte) offset;
 
         // only if Z is set
         if (ccr.getZero()) {
-            programCounter = programCounter + signedOffset;
+            programCounter = (programCounter + signedOffset) & 0xFFFF;
         }
     }
-
     //Branch if Greater than or Equal to Zero
     public void BGE() {
         // fetch offset
@@ -549,10 +545,9 @@ public class CPU {
         byte signedOffset = (byte) offset;
         // check if N & V OR !N & !v
         if ((ccr.getNegative() && ccr.getOverflow()) || (!ccr.getNegative() && !ccr.getOverflow())) {
-            programCounter = programCounter + signedOffset;
+            programCounter = (programCounter + signedOffset) & 0xFFFF;
         }
     }
-
     //Branch if Greater than Zero
     public void BGT() {
         // fetch offset
@@ -561,20 +556,18 @@ public class CPU {
         byte signedOffset = (byte) offset;
         // if (!Z & ((N & V) OR (!N & !V))
         if (!ccr.getZero() && ((ccr.getNegative() && ccr.getOverflow()) || (!ccr.getNegative() && !ccr.getOverflow()))) {
-            programCounter = programCounter + signedOffset;
+            programCounter = (programCounter + signedOffset) & 0xFFFF;
         }
     }
-
     //Branch if Higher
     public void BHI() {
         int offset = fetch();
         byte signedOffset = (byte) offset;
 
         if (!ccr.getCarry() && !ccr.getZero()) {
-            programCounter = programCounter + signedOffset;
+            programCounter = (programCounter + signedOffset) & 0xFFFF;
         }
     }
-
     //Bit Test
     public void BIT(int accx, int addressingMode) {
         int operand;
@@ -600,73 +593,97 @@ public class CPU {
         ccr.setOverflow(false);
 
     }
-
     //Branch if Less than or Equal to Zero
     public void BLE(){
+        // fetch offset
+        int offset = fetch();
+        // convert to signed integer
+        byte signedOffset = (byte) offset;
+
         if (ccr.getZero() || ((ccr.getNegative() && !ccr.getOverflow()) || (!ccr.getNegative() && ccr.getOverflow()))){
-            programCounter = programCounter + fetch();
+            programCounter = (programCounter + signedOffset) & 0xFFFF;
         }
     }
-
     //Branch if Lower or Same
     public void BLS(){
+        // fetch offset
+        int offset = fetch();
+        // convert to signed integer
+        byte signedOffset = (byte) offset;
         if (ccr.getCarry() || ccr.getZero()){
-            programCounter = programCounter + fetch();
+            programCounter = (programCounter + signedOffset) & 0xFFFF;
         }
     }
-
     //Branch if Less than Zero
     public void BLT(){
+        // fetch offset
+        int offset = fetch();
+        // convert to signed integer
+        byte signedOffset = (byte) offset;
         if ((ccr.getNegative() && !ccr.getOverflow() || (!ccr.getNegative() && ccr.getOverflow()))){
-            programCounter = programCounter + fetch();
+            programCounter = (programCounter + signedOffset) & 0xFFFF;
         }
     }
-
     //Branch if Minus
     public void BMI(){
+        // fetch offset
+        int offset = fetch();
+        // convert to signed integer
+        byte signedOffset = (byte) offset;
         if (ccr.getNegative()){
-            programCounter = programCounter + fetch() & 0xFFFF;
+            programCounter = (programCounter + signedOffset) & 0xFFFF;
         }
     }
-
     //Branch if Not Equal
     public void BNE(){
+        // fetch offset
+        int offset = fetch();
+        // convert to signed integer
+        byte signedOffset = (byte) offset;
         if (!ccr.getZero()){
-            programCounter = programCounter + fetch();
+            programCounter = (programCounter + signedOffset) & 0xFFFF;
         }
     }
-
     //Branch is Plus
     public void BPL(){
+        // fetch offset
+        int offset = fetch();
+        // convert to signed integer
+        byte signedOffset = (byte) offset;
         if (!ccr.getNegative()){
-            programCounter = programCounter + fetch() & 0xFFFF;
+            programCounter = (programCounter + signedOffset) & 0xFFFF;
         }
     }
-
     //Branch Always
     public void BRA(){
-        programCounter = (programCounter + fetch()) & 0xFFFF;
+        byte offset = (byte) fetch();
+        programCounter = (programCounter + offset) & 0xFFFF;
     }
-
-    //Branch to Subrouting
+    //Branch to Subroutine
     public void BSR(){
 
     }
-
     //Branch if Overflow Clear
     public void BVC(){
+        // fetch offset
+        int offset = fetch();
+        // convert to signed integer
+        byte signedOffset = (byte) offset;
         if (!ccr.getOverflow()){
-            programCounter = programCounter + fetch();
+            programCounter = (programCounter + signedOffset) & 0xFFFF;
         }
     }
 
     //Branch if Overflow Set
     public void BVS(){
+        // fetch offset
+        int offset = fetch();
+        // convert to signed integer
+        byte signedOffset = (byte) offset;
         if (ccr.getOverflow()){
-            programCounter = programCounter + fetch();
+            programCounter = (programCounter + signedOffset) & 0xFFFF;
         }
     }
-
     //Compare Accummulators
     public void CBA(){
         int res = accumulatorA - accumulatorB & 0xFF;
@@ -680,13 +697,10 @@ public class CPU {
         ccr.setOverflow((A7 && !B7 && !R7) || (!A7 && B7 && R7));
         ccr.setCarry((!A7 && B7) || (B7 && R7) || (R7 & !A7));
     }
-
-
     //Clear Carry
     public void CLC() {
         ccr.setCarry(false);
     }
-
     //clear interrupt
     public void CLI() {
         ccr.setInterrupt(false);
@@ -701,6 +715,7 @@ public class CPU {
                 memory.write(getAddress(addressingMode), (byte)0);
                 break;
         }
+
         ccr.setNegative(false);
         ccr.setZero(true);
         ccr.setOverflow(false);
@@ -762,42 +777,80 @@ public class CPU {
         ccr.setOverflow(false);
         ccr.setCarry(true);
     }
-    //Compare Index Register
+    //Compare Index Register NOT DONE!
     public void CPX(int addressingMode){
-        int address = getAddress(addressingMode);
+       int ub = 0;
+       int lb = 0;
+       if (addressingMode == 0){
+            ub = fetch();
+            lb = fetch();
+       } else if (addressingMode == 1){
+            int address = fetch();
+            ub = memory.read(address);
+            lb = memory.read(address + 1);
 
-        int operand = memory.read(address);
+       } else if (addressingMode == 2){
+            int upperAddress = fetch();
+            int lowerAddress = fetch();
+
+            int address = ((upperAddress << 8) | lowerAddress) & 0xFFFF;
+            ub = memory.read(address) & 0xFF00;
+            lb = memory.read(address) & 0x00FF;
+       } else if (addressingMode == 3){
+            int address = (indexRegister + fetch()) & 0xFFFF;
+
+           ub = memory.read(address) & 0xFF00;
+           lb = memory.read(address) & 0x00FF;
+       }
+       int rh = (indexRegister & 0xFF00) - ub;
+       int lh = (indexRegister & 0x00FF) - lb;
+
+       ccr.setNegative((rh & 0x80) != 0);
+       ccr.setZero((rh == 0) && (lh == 0));
+
+       boolean RH7 = ((rh & 0x80) != 0);
+       boolean IXH7 = ((indexRegister & 0x8000) != 0);
+       boolean M7 = ((lh & 0x80) != 0);
+       ccr.setOverflow((IXH7 && !M7 && !RH7) || (!IXH7 && M7 && RH7));
+
 
     }
     //Decimal Adjust ACCA
     public void DAA(){
-
+        //TODO
     }
     //Decrement
-    //accumulatorA
-    public void DECA(){
-        int res = accumulatorA - 1 & 0xFF;
+    public void DEC(int addressingMode){
+        int res = 0;
+        if (addressingMode == 'A'){
+            res = accumulatorA - 1 & 0xFF;
+            ccr.setOverflow(accumulatorA == 0x80);
+            accumulatorA = res;
+        } else if (addressingMode == 'B'){
+            res = accumulatorB - 1 & 0xFF;
+            ccr.setOverflow(accumulatorB == 0x80);
+            accumulatorB = res;
+        } else if (addressingMode == 2){
+            //extended
+            int upperAddress = fetch();
+            int lowerAddress = fetch();
 
+            int address = ((upperAddress << 8) | lowerAddress) & 0xFFFF;
+            res = memory.read(address);
+            ccr.setOverflow(res == 0x80);
+            res = res - 1 & 0xFF;
+            memory.write(address, (byte) res);
+
+        } else if (addressingMode == 3){
+            //indexed
+            int address = indexRegister + fetch() & 0xFFFF;
+            res = memory.read(address);
+            ccr.setOverflow(res == 0x80);
+            res = res - 1 & 0xFF;
+            memory.write(address, (byte) res);
+        }
         ccr.setNegative((res & 0x80) != 0);
         ccr.setZero(res == 0);
-        ccr.setOverflow(accumulatorA == 0x80);
-        accumulatorA = res;
-    }
-    //accumulatorB
-    public void DECB(){
-        int res = accumulatorB - 1 & 0xFF;
-        ccr.setNegative((res & 0x80) != 0);
-        ccr.setZero(res == 0);
-        ccr.setOverflow(accumulatorB == 0x80);
-        accumulatorB = res;
-    }
-    //extended
-    public void DEC_EXT(){
-
-    }
-    //indexed
-    public void DEC_IND(){
-
     }
     //Decrement Stack Pointer
     public void DES(){
@@ -811,56 +864,50 @@ public class CPU {
         ccr.setZero(indexRegister == 0);
     }
     //Exclusive OR
-    //accumulator A
-    //immediate
-    public void EORA_IMM(){
-
-    }
-    //direct
-    public void EORA_DIR(){
-
-    }
-    //extended
-    public void EORA_EXT(){
-
-    }
-    //indexed
-    public void EORA_IND(){
-
-    }
-    //accumulator B
-    //immediate
-    public void EORB_IMM(){
-
-    }
-    //direct
-    public void EORB_DIR(){
-
-    }
-    //extended
-    public void EORB_EXT(){
-
-    }
-    //indexed
-    public void EORB_IND(){
-
+    public void EOR(int accx, int addressingMode){
+        int operand;
+        int res = 0;
+        if (addressingMode == 0){
+            operand = fetch();
+        } else {
+            int address = getAddress(addressingMode);
+            operand = memory.read(address);
+        }
+        if (accx == 'A'){
+            res = accumulatorA ^ operand;
+            accumulatorA = res;
+        } else if (accx == 'B'){
+            res = accumulatorB ^ operand;
+            accumulatorB = res;
+        }
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setZero(res == 0);
+        ccr.setOverflow(false);
     }
     //Increment
-    //accumulator A
-    public void INCA(){
+    public void INC(int addressingMode){
+        int res;
+        int operand;
 
-    }
-    //accumulator B
-    public void INCB(){
+        if (addressingMode == 'A'){
+            operand = accumulatorA;
+            res = operand + 1 & 0xFF;
+            accumulatorA = res;
+        } else if (addressingMode == 'B'){
+            operand = accumulatorB;
+            res = operand + 1 & 0xFF;
+            accumulatorB = res;
+        } else {
+            int address = getAddress(addressingMode);
+            operand = memory.read(address) & 0xFF;
 
-    }
-    //extended
-    public void INC_EXT(){
+            res = operand + 1 & 0xFF;
+            memory.write(address, (byte) res);
+        }
 
-    }
-    //indexed
-    public void INC_IND(){
-
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setOverflow(operand == 0x7F);
+        ccr.setZero(res == 0);
     }
     //Increment Stack Pointer
     public void INS(){
@@ -874,286 +921,281 @@ public class CPU {
         ccr.setZero(indexRegister == 0);
     }
     //Jump
-    //extended
-    public void JMP_EXT(){
-        int upperAddress = fetch();
-        int lowerAddress = fetch();
-        //combine upper and lower addresses
-        int address = (upperAddress << 8) | lowerAddress;
-
-        programCounter = address & 0xFFFF;
-
+    public void JMP(int addressingMode){
+        programCounter = getAddress(addressingMode) & 0xFFFF;
     }
-    //indexed
-    public void JMP_IND(){
-        int address = fetch() + indexRegister;
 
-        programCounter = address & 0xFFFF;
-    }
     //Jump to Subroutine
-    //extended
-    public void JSR_EXT(){
+    public void JSR(int addressingMode){
+        // getAddress already increments by : 2 for EXT, 1 for IND
+        int address = getAddress(addressingMode);
 
-    }
-    //indexed
-    public void JSR_IND(){
+        int pcl = programCounter & 0xFF;
+        memory.write(stackPointer, (byte) pcl);
+        stackPointer = (stackPointer - 1) & 0xFFFF;
 
+        int pch = (programCounter >> 8) & 0xFF;
+        memory.write(stackPointer, (byte) pch);
+        stackPointer = (stackPointer - 1) & 0xFFFF;
+
+        programCounter = address & 0xFFFF;
     }
     //Load Accumulator
-    //accumulator A
-    //immediate
-    public void LDAA_IMM() {
-        //loads memory into accumulator
-        accumulatorA = fetch();
+    public void LDA(int accx, int addressingMode){
+        int operand;
+        if (addressingMode == 0){
+            operand = fetch() & 0xFF;
+        } else {
+            int address = getAddress(addressingMode);
+            operand = memory.read(address) & 0xFF;
+        }
 
-        ccr.setNegative((accumulatorA & 0x80) != 0);
-        ccr.setZero(accumulatorA == 0);
-        ccr.setOverflow(false);
-    }
-    //direct
-    public void LDAA_DIR(){
-        int address = fetch();
-        accumulatorA = memory.read(address);
-
-        ccr.setNegative((accumulatorA & 0x80) != 0);
-        ccr.setZero(accumulatorA == 0);
-        ccr.setOverflow(false);
-    }
-    //extended
-    public void LDAA_EXT(){
-        int upperAddress = fetch();
-        int lowerAddress = fetch();
-
-        int address = (upperAddress << 8) | lowerAddress;
-
-        accumulatorA = memory.read(address);
-
-        ccr.setNegative((accumulatorA & 0x80) != 0);
-        ccr.setZero(accumulatorA == 0);
-        ccr.setOverflow(false);
-    }
-    //index
-    public void LDAA_IND(){
-        int address = fetch() + indexRegister & 0xFFFF;
-
-        accumulatorA = memory.read(address);
-
-        ccr.setNegative((accumulatorA & 0x80) != 0);
-        ccr.setZero(accumulatorA == 0);
-        ccr.setOverflow(false);
-    }
-    //accumulator B
-    //immediate
-    public void LDAB_IMM() {
-        //loads memory into accumulator
-        accumulatorB = fetch();
-
-        ccr.setNegative((accumulatorB & 0x80) != 0);
-        ccr.setZero(accumulatorB == 0);
-        ccr.setOverflow(false);
-    }
-    //direct
-    public void LDAB_DIR(){
-        int address = fetch();
-        accumulatorB = memory.read(address);
-
-        ccr.setNegative((accumulatorB & 0x80) != 0);
-        ccr.setZero(accumulatorB == 0);
-        ccr.setOverflow(false);
-    }
-    //extended
-    public void LDAB_EXT(){
-        int upperAddress = fetch();
-        int lowerAddress = fetch();
-
-        int address = (upperAddress << 8) | lowerAddress & 0xFFFF;
-
-        accumulatorB = memory.read(address);
-
-        ccr.setNegative((accumulatorB & 0x80) != 0);
-        ccr.setZero(accumulatorB == 0);
-        ccr.setOverflow(false);
-    }
-    //index
-    public void LDAB_IND(){
-        int address = fetch() + indexRegister & 0xFFFF;
-
-        accumulatorB = memory.read(address);
-
-        ccr.setNegative((accumulatorB & 0x80) != 0);
-        ccr.setZero(accumulatorB == 0);
+        if (accx == 'A'){
+            accumulatorA = operand;
+        } else if (accx == 'B'){
+            accumulatorB = operand;
+        }
+        ccr.setNegative((operand & 0x80) != 0);
+        ccr.setZero(operand == 0);
         ccr.setOverflow(false);
     }
     //Load Stack Pointer
-    //immediate
-    public void LDS_IMM(){
-        int sph = fetch();
-        int spl = fetch();
+    public void LDS(int addressingMode){
+        int SPH = 0;
+        int SPL = 0;
+        if (addressingMode == 0){
+            SPH = fetch();
+            SPL = fetch();
 
-        stackPointer = ((sph << 8) | spl) & 0xFFFF;
+        } else {
+            int upperAddress = getAddress(addressingMode) & 0xFFFF;
+            int lowerAddress = (upperAddress + 1) & 0xFFFF;
 
-        ccr.setNegative((stackPointer & 0x8000) != 0);
-        ccr.setZero(stackPointer == 0);
-        ccr.setOverflow(false);
-    }
-    //direct
-    public void LDS_DIR(){
-        int address = fetch();
-        int hb = memory.read(address);
-        int lb = memory.read(address + 1);
+            SPH = memory.read(upperAddress);
+            SPL = memory.read(lowerAddress);
+        }
 
-
-        stackPointer = ((hb << 8) | lb) & 0xFFFF;
+        stackPointer = ((SPH << 8) | SPL) & 0xFFFF;
 
         ccr.setNegative((stackPointer & 0x8000) != 0);
         ccr.setZero(stackPointer == 0);
         ccr.setOverflow(false);
     }
-    //extended
-    public void LDS_EXT(){
-        int upper = fetch();
-        int lower = fetch();
 
-        int hb = memory.read(upper);
-        int lb = memory.read(lower);
-
-        stackPointer = ((hb << 8) | lb) & 0xFFFF;
-
-        ccr.setNegative((stackPointer & 0x8000) != 0);
-        ccr.setZero(stackPointer == 0);
-        ccr.setOverflow(false);
-    }
-    //indexed
-    public void LDS_IND(){
-        int address = fetch() + indexRegister & 0xFFFF;
-
-        stackPointer = memory.read(address);
-
-
-        ccr.setNegative((stackPointer & 0x8000) != 0);
-        ccr.setZero(stackPointer == 0);
-        ccr.setOverflow(false);
-    }
     //Load Index Register
-    //immediate
-    public void LDX_IMM(){
+    public void LDX(int addressingMode){
+        int IXH = 0;
+        int IXL = 0;
 
-    }
-    //direct
-    public void LDX_DIR(){
+        if (addressingMode == 0){
+            IXH = fetch();
+            IXL = fetch();
+        } else {
+            int upperAddress = getAddress(addressingMode) & 0xFFFF;
+            int lowerAddress = (upperAddress + 1) & 0xFFFF;
+            IXH = memory.read(upperAddress);
+            IXL = memory.read(lowerAddress);
+        }
+        indexRegister = ((IXH << 8) | IXL) & 0xFFFF;
 
-    }
-    //extended
-    public void LDX_EXT(){
-
-    }
-    //indexed
-    public void LDX_IND(){
-
+        ccr.setNegative((IXH & 0x80) != 0);
+        ccr.setZero(indexRegister == 0);
+        ccr.setOverflow(false);
     }
     //Logical Shift Right
-    //accumulator A
-    public void LSRA(){
+    public void LSR(int addressingMode){
+        int  operand = 0;
+        int res = 0;
 
+        if (addressingMode == 'A'){
+            operand = accumulatorA;
+            res = operand >>> 1;
+            accumulatorA = res;
+        } else if (addressingMode == 'B'){
+            operand = accumulatorB;
+            res = operand >>> 1;
+            accumulatorB = res;
+        } else {
+            int address = getAddress(addressingMode);
+            operand = memory.read(address) & 0xFF;
+            res = operand >>> 1;
+            memory.write(address, (byte) res);
+        }
+        ccr.setCarry((operand & 0x01) != 0);
+        ccr.setNegative(false);
+        ccr.setZero(res == 0);
+        ccr.setOverflow(!(ccr.getNegative()) == ccr.getCarry());
     }
-    //accumulator B
-    public void LSRB(){
 
-    }
-    //extended
-    public void LSR_EXT(){
-
-    }
-    //indexed
-    public void LSR_IND(){
-
-    }
     //Negate
-    //accumulator A
-    public void NEGA(){
-
-    }
-    //accumulator B
-    public void NEGB(){
-
-    }
-    //extended
-    public void NEG_EXT(){
-
-    }
-    //indexed
-    public void NEG_IND(){
-
+    public void NEG(int addressingMode){
+        int res;
+        if (addressingMode == 'A'){
+            res = (-accumulatorA) & 0xFF;
+            accumulatorA = res;
+        } else if (addressingMode == 'B'){
+            res = (-accumulatorB) & 0xFF;
+            accumulatorB = res;
+        } else {
+            int address = getAddress(addressingMode);
+            int operand = memory.read(address);
+            res = (-operand) & 0xFF;
+            memory.write(address, (byte) res);
+        }
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setZero(res == 0);
+        ccr.setOverflow(res == 0x80);
+        ccr.setCarry(res != 0);
     }
     //No Operation
     public void NOP(){
         programCounter++;
     }
     //Inclusive OR
-    //accumulator A
-    //immediate
-    public void ORAA_IMM(){
+    public void ORA(int accx, int addressingMode){
+        int operand;
+        int res = 0;
+        if (addressingMode == 0){
+            operand = fetch();
+        } else {
+            int address = getAddress(addressingMode);
+            operand = memory.read(address) & 0xFF;
+        }
 
-    }
-    //direct
-    public void ORAA_DIR(){
-
-    }
-    //extended
-    public void ORAA_EXT(){
-
-    }
-    //indexed
-    public void ORAA_IND(){
-
-    }
-    //accumulator B
-    //immediate
-    public void ORAB_IMM(){
-
-    }
-    //direct
-    public void ORAB_DIR(){
-
-    }
-    //extended
-    public void ORAB_EXT(){
-
-    }
-    //indexed
-    public void ORAB_IND(){
-
+        if (accx == 'A'){
+            res = accumulatorA | operand;
+            accumulatorA = res;
+        } else if (accx == 'B'){
+            res = accumulatorB | operand;
+            accumulatorB = res;
+        }
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setZero(res == 0);
+        ccr.setOverflow(false);
     }
     //Push Data Onto Stack
-    //accumlator A
-    public void PSHA(){
-        memory.write(stackPointer, (byte)accumulatorA);
-        stackPointer --;
-    }
-    //accumulator B
-    public void PSHB(){
-        memory.write(stackPointer, (byte)accumulatorB);
-        stackPointer--;
+    public void PSH(int accx){
+        if (accx == 'A'){
+            memory.write(stackPointer, (byte)accumulatorA);
+        } else if (accx == 'B'){
+            memory.write(stackPointer, (byte)accumulatorB);
+        }
+        stackPointer  = (stackPointer - 1) & 0xFFFF;
     }
     //Pull Data from Stack
-    //accumulator A
-    public void PULA(){
-        stackPointer++;
-        accumulatorA = memory.read(stackPointer);
-    }
-    //accumulator B
-    public void PULB(){
-        stackPointer++;
-        accumulatorB = memory.read(stackPointer);
+    public void PUL(int accx){
+        stackPointer = (stackPointer + 1) & 0xFFFF;
+        int operand = memory.read(stackPointer) & 0xFF;
+        if (accx == 'A'){
+            accumulatorA = operand;
+        } else if (accx == 'B'){
+            accumulatorB = operand;
+        }
+
     }
     //Rotate Left
-    public void ROL(){}
+    public void ROL(int addressingMode){
+        int operand;
+        int res;
+        boolean oldCarry = ccr.getCarry();
+
+        if (addressingMode == 'A'){
+            operand = accumulatorA;
+            ccr.setCarry((operand & 0x80) != 0);
+            res = (operand << 1) & 0xFF;
+            if (oldCarry){
+                res = res | 0x01;
+            }
+            accumulatorA = res;
+        } else if (addressingMode == 'B'){
+            operand = accumulatorB;
+            ccr.setCarry((operand & 0x80) != 0);
+            res = (operand << 1) & 0xFF;
+            if (oldCarry){
+                res = res | 0x01;
+            }
+            accumulatorB = res;
+        } else {
+            int address = getAddress(addressingMode);
+            operand = memory.read(address) & 0xFF;
+            ccr.setCarry((operand & 0x80) != 0);
+            res = (operand << 1) & 0xFF;
+            if (oldCarry){
+                res = res | 0x01;
+            }
+            memory.write(address, (byte) res);
+        }
+
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setZero(res == 0);
+        ccr.setOverflow(ccr.getNegative() != ccr.getCarry());
+
+    }
     //Rotate Right
-    public void ROR(){}
+    public void ROR(int addressingMode){
+        int operand;
+        int res;
+        boolean oldCarry = ccr.getCarry();
+
+        if (addressingMode == 'A'){
+            operand = accumulatorA;
+            ccr.setCarry((operand & 0x01) != 0);
+            res = (operand >>> 1) & 0xFF;
+            if (oldCarry){
+                res = res | 0x80;
+            }
+            accumulatorA = res;
+        } else if (addressingMode == 'B'){
+            operand = accumulatorB;
+            ccr.setCarry((operand & 0x01) != 0);
+            res = (operand >>> 1) & 0xFF;
+            if (oldCarry){
+                res = res | 0x80;
+            }
+            accumulatorB = res;
+        } else {
+            int address = getAddress(addressingMode);
+            operand = memory.read(address) & 0xFF;
+            ccr.setCarry((operand & 0x01) != 0);
+            res = (operand >>> 1) & 0xFF;
+            if (oldCarry){
+                res = res | 0x80;
+            }
+            memory.write(address, (byte) res);
+        }
+
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setZero(res == 0);
+        ccr.setOverflow(ccr.getNegative() != ccr.getCarry());
+    }
 
     //Return from Interrupt
     public void RTI(){
-
+        stackPointer = (stackPointer + 1) & 0xFFFF;
+        // restore condition codes
+        int conditionCodeRegister = memory.read(stackPointer);
+        //ccr.setState(ccr); --> implement this
+        stackPointer = (stackPointer + 1) & 0xFFFF;
+        // acca
+        accumulatorA = memory.read(stackPointer);
+        stackPointer = (stackPointer + 1) & 0xFFFF;
+        // accb
+        accumulatorB = memory.read(stackPointer);
+        stackPointer = (stackPointer + 1) & 0xFFFF;
+        // ixh
+        int ixh = memory.read(stackPointer);
+        stackPointer = (stackPointer + 1) & 0xFFFF;
+        // ixl
+        int ixl = memory.read(stackPointer);
+        stackPointer = (stackPointer + 1) & 0xFFFF;
+        indexRegister = ((ixh << 8) | ixl) & 0xFFFF;
+        //pch
+        int pch = memory.read(stackPointer);
+        stackPointer = (stackPointer + 1) & 0xFFFF;
+        //pcl
+        int pcl = memory.read(stackPointer);
+        stackPointer = (stackPointer + 1) & 0xFFFF;
+        programCounter = ((pch << 8) | pcl) & 0xFFFF;
     }
     //Return from Subroutine
     public void RTS(){
