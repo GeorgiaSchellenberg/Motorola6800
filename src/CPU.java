@@ -256,14 +256,14 @@ public class CPU {
             //:::::::::::::: Subtract Accumulators
             case 0x10: SBA();break;
             //:::::::::::::: Subtract with Carry
-//            case 0x82: SBCA_IMM();break;
-//            case 0x92: SBCA_DIR();break;
-//            case 0xB2: SBCA_EXT();break;
-//            case 0xA2: SBCA_IND();break;
-//            case 0xC2: SBCB_IMM();break;
-//            case 0xD2: SBCB_DIR();break;
-//            case 0xF2: SBCB_EXT();break;
-//            case 0xE2: SBCB_IND();break;
+            case 0x82: SBC('A', 0);break;
+            case 0x92: SBC('A', 1);break;
+            case 0xB2: SBC('A', 2);break;
+            case 0xA2: SBC('A', 3);break;
+            case 0xC2: SBC('B', 0);break;
+            case 0xD2: SBC('B', 1);break;
+            case 0xF2: SBC('B', 2);break;
+            case 0xE2: SBC('B', 3);break;
             //:::::::::::::: Set Carry
             case 0x0D: SEC();break;
             //:::::::::::::: Set Interrupt Mask
@@ -271,29 +271,29 @@ public class CPU {
             //:::::::::::::: Set Two's Complement Overflow Bit
             case 0x0B: SEV();break;
             //:::::::::::::: Store Accumulator
-//            case 0x97: STAA_DIR();break;
-//            case 0xB7: STAA_EXT();break;
-//            case 0xA7: STAA_IND();break;
-//            case 0xD7: STAB_DIR();break;
-//            case 0xF7: STAB_EXT();break;
-//            case 0xE7: STAB_IND();break;
+            case 0x97: STA('A', 1);break;
+            case 0xB7: STA('A', 2);break;
+            case 0xA7: STA('A', 3);break;
+            case 0xD7: STA('B', 1);break;
+            case 0xF7: STA('B', 2);break;
+            case 0xE7: STA('B', 3);break;
             //:::::::::::::: Store Stack Pointer
-            case 0x9F: STS_DIR();break;
-            case 0xBF: STS_EXT();break;
-            case 0xAF: STS_IND();break;
+            case 0x9F: STS(1);break;
+            case 0xBF: STS(2);break;
+            case 0xAF: STS(3);break;
             //:::::::::::::: STX
-            case 0xDF: STX_DIR();break;
-            case 0xFF: STX_EXT();break;
-            case 0xEF: STX_IND();break;
+            case 0xDF: STX(1);break;
+            case 0xFF: STX(2);break;
+            case 0xEF: STX(3);break;
             //:::::::::::::: Subtract
-//            case 0x80: SUBA_IMM();break;
-//            case 0x90: SUBA_DIR();break;
-//            case 0xB0: SUBA_EXT();break;
-//            case 0xA0: SUBA_IND();break;
-//            case 0xC0: SUBB_IMM();break;
-//            case 0xD0: SUBB_DIR();break;
-//            case 0xF0: SUBB_EXT();break;
-//            case 0xE0: SUBB_IND();break;
+            case 0x80: SUB('A', 0);break;
+            case 0x90: SUB('A', 1);break;
+            case 0xB0: SUB('A', 2);break;
+            case 0xA0: SUB('A', 3);break;
+            case 0xC0: SUB('B', 0);break;
+            case 0xD0: SUB('B', 1);break;
+            case 0xF0: SUB('B', 2);break;
+            case 0xE0: SUB('B', 3);break;
             //:::::::::::::: Software Interrupt
             case 0x3F: SWI();break;
             //:::::::::::::: Transfer from Accumulator A to Accumulator B
@@ -305,10 +305,10 @@ public class CPU {
             //:::::::::::::: Transfer from Processor CCR to Accumulator A
             case 0x07: TPA();break;
             //:::::::::::::: Test
-            case 0x4D: TSTA();break;
-            case 0x5D: TSTB();break;
-            case 0x7D: TST_EXT();break;
-            case 0x6D: TST_IND();break;
+            case 0x4D: TST('A');break;
+            case 0x5D: TST('B');break;
+            case 0x7D: TST(2);break;
+            case 0x6D: TST(3);break;
             //:::::::::::::: Transfer from Stack Pointer to Index Register
             case 0x30: TSX();break;
             //:::::::::::::: transfer from Index Register to Stack Pointer
@@ -337,8 +337,6 @@ public class CPU {
         }
         return address;
     }
-
-
     //add accumulator B to accumulator A
     public void ABA() {
         int res = accumulatorA + accumulatorB;
@@ -509,7 +507,6 @@ public class CPU {
         // only branch if C is clear
         if (!ccr.getCarry()) {
             programCounter = (programCounter + signedOffset) & 0xFFFF;
-
         }
     }
     //Branch if Carry Set
@@ -661,7 +658,18 @@ public class CPU {
     }
     //Branch to Subroutine
     public void BSR(){
+        int offset = fetch();
+        byte signedOffset = (byte) offset;
 
+        int PCL = programCounter & 0xFF;
+        memory.write(stackPointer, (byte) PCL);
+        stackPointer = (stackPointer - 1) & 0xFFFF;
+
+        int PCH = (programCounter >> 8) & 0xFF;
+        memory.write(stackPointer, (byte) PCH);
+        stackPointer = (stackPointer - 1) & 0xFFFF;
+
+        programCounter = (programCounter + signedOffset) & 0xFFFF;
     }
     //Branch if Overflow Clear
     public void BVC(){
@@ -782,38 +790,41 @@ public class CPU {
        int ub = 0;
        int lb = 0;
        if (addressingMode == 0){
+           //immediate
             ub = fetch();
             lb = fetch();
        } else if (addressingMode == 1){
+           //direcet
             int address = fetch();
             ub = memory.read(address);
-            lb = memory.read(address + 1);
+            lb = memory.read((address + 1) & 0xFFFF);
 
        } else if (addressingMode == 2){
+           //extended
             int upperAddress = fetch();
             int lowerAddress = fetch();
-
             int address = ((upperAddress << 8) | lowerAddress) & 0xFFFF;
-            ub = memory.read(address) & 0xFF00;
-            lb = memory.read(address) & 0x00FF;
+
+            ub = memory.read(address);
+            lb = memory.read((address + 1) & 0xFFFF);
+
        } else if (addressingMode == 3){
             int address = (indexRegister + fetch()) & 0xFFFF;
 
-           ub = memory.read(address) & 0xFF00;
-           lb = memory.read(address) & 0x00FF;
+           ub = memory.read(address);
+           lb = memory.read((address + 1) & 0xFFFF);
        }
-       int rh = (indexRegister & 0xFF00) - ub;
-       int lh = (indexRegister & 0x00FF) - lb;
 
-       ccr.setNegative((rh & 0x80) != 0);
-       ccr.setZero((rh == 0) && (lh == 0));
+       int operand = ((ub << 8) | lb) & 0xFFFF;
+       int res = (indexRegister - operand) & 0xFFFF;
 
-       boolean RH7 = ((rh & 0x80) != 0);
-       boolean IXH7 = ((indexRegister & 0x8000) != 0);
-       boolean M7 = ((lh & 0x80) != 0);
-       ccr.setOverflow((IXH7 && !M7 && !RH7) || (!IXH7 && M7 && RH7));
+       ccr.setNegative((res & 0x8000) != 0);
+       ccr.setZero(res == 0);
 
-
+        boolean IXH7 = ((indexRegister & 0x8000) != 0);
+        boolean RH7 = ((res & 0x8000) != 0);
+        boolean M7 = ((operand & 0x8000) != 0);
+        ccr.setOverflow((IXH7 && !M7 && !RH7) || (!IXH7 && M7 && RH7));
     }
     //Decimal Adjust ACCA
     public void DAA(){
@@ -859,7 +870,6 @@ public class CPU {
     //Decrement Index Register
     public void DEX(){
         indexRegister = indexRegister - 1 & 0xFFFF;
-
         // update
         ccr.setZero(indexRegister == 0);
     }
@@ -961,8 +971,8 @@ public class CPU {
     }
     //Load Stack Pointer
     public void LDS(int addressingMode){
-        int SPH = 0;
-        int SPL = 0;
+        int SPH;
+        int SPL;
         if (addressingMode == 0){
             SPH = fetch();
             SPL = fetch();
@@ -1230,25 +1240,31 @@ public class CPU {
             int address = getAddress(addressingMode);
             operand = memory.read(address) & 0xFF;
         }
-
+        boolean M7;
+        boolean R7;
+        boolean X7;
         if (accx == 'A'){
             res = (accumulatorA - operand) & 0xFF;
             if (ccr.getCarry()){
                 res = (res - 1) & 0xFF;
             }
-            // set ccr
+            X7 = (accumulatorA & 0x80) != 0;
             accumulatorA = res;
         } else {
             res = (accumulatorB - operand) & 0xFF;
             if (ccr.getCarry()){
                 res = (res - 1) & 0xFF;
             }
-            // set ccr
+            X7 = (accumulatorB & 0x80) != 0;
             accumulatorB = res;
         }
+        M7 = (operand & 0x80) != 0;
+        R7 = (res & 0x80) != 0;
+
         ccr.setNegative((res & 0x80) != 0);
         ccr.setZero(res == 0);
-
+        ccr.setOverflow((X7 && !M7 && !R7) || (!X7 && M7 && R7));
+        ccr.setCarry((!X7 & M7) || (M7 && R7) || ( R7 && !X7));
     }
 
     //Set Carry
@@ -1281,42 +1297,104 @@ public class CPU {
     }
 
     //Store Stack Pointer
-    //direct
-    public void STS_DIR(){
+    public void STS(int addressingMode){
+        int address = getAddress(addressingMode);
+        int SPL = (stackPointer & 0xFF);
+        int SPH = (stackPointer >> 8) & 0xFF;
 
-    }
-    //extended
-    public void STS_EXT(){
+        memory.write(address, (byte) SPH);
+        memory.write(address + 1, (byte) SPL);
 
-    }
-    //indexed
-    public void STS_IND(){
-
+        ccr.setNegative((SPH & 0x80) != 0);
+        ccr.setZero(SPL == 0 && SPH == 0);
+        ccr.setOverflow(false);
     }
     //Store Index Register
-    //direct
-    public void STX_DIR(){
+    public void STX(int addressingMode){
+        int address = getAddress(addressingMode);
 
-    }
-    //extended
-    public void STX_EXT(){
+        int IXL = (indexRegister & 0xFF);
+        int IXH = (indexRegister >> 8) & 0xFF;
 
-    }
-    //indexed
-    public void STX_IND(){
+        memory.write(address, (byte) IXH);
+        memory.write(address + 1, (byte) IXL);
 
+        ccr.setNegative((IXH & 0x80) != 0);
+        ccr.setZero(IXH == 0 && IXL == 0);
+        ccr.setOverflow(false);
     }
     //Subtract
-    public void SUB(int accx, int addressingMode){}
+    public void SUB(int accx, int addressingMode){
+        int operand;
+        int res;
+        if (addressingMode == 0) {
+            operand = fetch();
+        } else {
+            int address = getAddress(addressingMode);
+            operand = memory.read(address);
+        }
+        boolean M7;
+        boolean R7;
+        boolean X7;
+        if (accx == 'A'){
+            res = (accumulatorA - operand) & 0xFF;
+            X7 = (accumulatorA & 0x80) != 0;
+            accumulatorA = res;
+        } else {
+            res = (accumulatorB - operand) & 0xFF;
+            X7 = (accumulatorB & 0x80) != 0;
+            accumulatorB = res;
+        }
+        M7 = (operand & 0x80) != 0;
+        R7 = (res & 0x80) != 0;
+
+        ccr.setNegative((res & 0x80) != 0);
+        ccr.setZero(res == 0);
+        ccr.setOverflow((X7 && !M7 && !R7) || (!X7 && M7 && R7));
+        ccr.setCarry((!X7 && M7) || (M7 && R7) || (R7 && !X7));
+    }
 
     //Software Interrupt
     public void SWI(){
+        programCounter = (programCounter + 1) & 0xFFFF;
+        //push PC
+        int PCL = programCounter & 0xFF;
+        memory.write(stackPointer, (byte) PCL);
+        stackPointer = (stackPointer - 1) & 0xFFFF;
+
+        int PCH = (programCounter >> 8) & 0xFF;
+        memory.write(stackPointer, (byte) PCH);
+        stackPointer = (stackPointer - 1) & 0xFFFF;
+
+        //push index register
+        int IXL = indexRegister & 0xFF;
+        memory.write(stackPointer, (byte) IXL);
+        stackPointer = (stackPointer - 1) & 0xFFFF;
+
+        int IXH = (indexRegister >> 8) & 0xFF;
+        memory.write(stackPointer, (byte) IXH);
+        stackPointer = (stackPointer - 1) & 0xFFFF;
+
+        //push accumulators
+        memory.write(stackPointer, (byte) accumulatorA);
+        stackPointer = (stackPointer -1) & 0xFFFF;
+        //
+        memory.write(stackPointer, (byte) accumulatorB);
+        stackPointer = (stackPointer - 1) & 0xFFFF;
+
+        //push ccr
+        memory.write(stackPointer, (byte) ccr.getState());
+        stackPointer = (stackPointer - 1) & 0xFFFF;
+
         ccr.setInterrupt(true);
+        int pch = memory.read(0xFFFA);
+        int pcl = memory.read(0xFFFB);
+
+        programCounter = ((pch << 8) | pcl) & 0xFFFF;
     }
     //Transfer from Accumulator A to Accumulator B
     public void TAB(){
         accumulatorB = accumulatorA;
-        accumulatorB = accumulatorB & 0xFF;
         ccr.setNegative((accumulatorB & 0x80) != 0);
         ccr.setZero(accumulatorB == 0);
         ccr.setOverflow(false);
@@ -1324,99 +1402,75 @@ public class CPU {
     }
     //Transfer from Accumulator A to CCR
     public void TAP(){
-        ccr.setCarry((accumulatorA & 0x01) != 0);
-        ccr.setOverflow((accumulatorA & 0x02) != 0);
-        ccr.setZero((accumulatorA & 0x04) != 0);
-        ccr.setNegative((accumulatorA & 0x08)!= 0);
-        ccr.setInterrupt((accumulatorA & 0x10) != 0);
-        ccr.setHalfCarry((accumulatorA & 0x20) != 0);
+        ccr.setState(accumulatorA);
     }
     //Transfer from Accumulator B to Accumulator A
     public void TBA(){
         accumulatorA = accumulatorB;
-        accumulatorA = accumulatorA & 0xFF;
         ccr.setNegative((accumulatorA & 0x80) != 0);
         ccr.setZero(accumulatorA == 0);
         ccr.setOverflow(false);
     }
     //Transfer from CCR to accumulator A
     public void TPA(){
-        int temp = 0;
-        temp = temp | 0xC0;
-        temp = temp | (ccr.getHalfCarry() ? 1 : 0) << 5;
-        temp = temp | (ccr.getInterrupt() ? 1 : 0) << 4;
-        temp = temp | (ccr.getNegative() ? 1 : 0) << 3;
-        temp = temp | (ccr.getZero() ? 1 : 0) << 2;
-        temp = temp | (ccr.getOverflow() ? 1 : 0) << 1;
-        temp = temp | (ccr.getCarry() ? 1 : 0);
-
-        accumulatorA = temp;
+        accumulatorA = ccr.getState();
     }
     //Test
-    //accumulator A
-    public void TSTA(){
-        ccr.setNegative((accumulatorA & 0x80) != 0);
-        ccr.setZero(accumulatorA == 0);
-        ccr.setOverflow(false);
-        ccr.setCarry(false);
-    }
-    //accumulator B
-    public void TSTB(){
-        ccr.setNegative((accumulatorB & 0x80) != 0);
-        ccr.setZero(accumulatorB == 0);
-        ccr.setOverflow(false);
-        ccr.setCarry(false);
-    }
-    //extended
-    public void TST_EXT(){
-        int upperAddress = fetch();
-        int lowerAddress = fetch();
-
-        int address = (upperAddress << 8 | lowerAddress) & 0xFFFF;
-        int operand = memory.read(address);
+    public void TST(int addressingMode) {
+        int operand;
+        if (addressingMode == 'A'){
+            operand = accumulatorA;
+        } else if (addressingMode == 'B'){
+            operand = accumulatorB;
+        } else {
+            int address = getAddress(addressingMode);
+            operand = memory.read(address) & 0xFF;
+        }
 
         ccr.setNegative((operand & 0x80) != 0);
         ccr.setZero(operand == 0);
         ccr.setOverflow(false);
         ccr.setCarry(false);
-    }
-    //indexed
-    public void TST_IND(){
-        int address = indexRegister + fetch();
-        int operand = memory.read(address);
-
-        ccr.setNegative((operand & 0x80) != 0);
-        ccr.setZero(operand == 0);
-        ccr.setOverflow(false);
-        ccr.setCarry(false);
-
     }
     //Transfer from Stack Pointer to Index Register
     public void TSX(){
-        indexRegister = stackPointer + 1;
-
+        indexRegister = (stackPointer + 1) & 0xFFFF;
     }
     //Transfer from Index Register to Stack Pointer
     public void TXS(){
-        stackPointer = indexRegister - 1;
+        stackPointer = (indexRegister - 1) & 0xFFFF;
     }
     //Wait for Interrupt
     public void WAI(){
-        //increment PC
-        //push pcl
-        //dec sp
-        //push pch
-        //dec sp
-        //push ixl
-        //dec sp
-        //push ixh
-        //dec sp
-        //acca
-        //dec sp
-        //accb
-        //dec sp
-        //cc
-        //dec sp
+        programCounter = (programCounter + 1) & 0xFFFF;
+        //push PC
+        int PCL = programCounter & 0xFF;
+        memory.write(stackPointer, (byte) PCL);
+        stackPointer = (stackPointer - 1) & 0xFFFF;
+
+        int PCH = (programCounter >> 8) & 0xFF;
+        memory.write(stackPointer, (byte) PCH);
+        stackPointer = (stackPointer - 1) & 0xFFFF;
+
+        //push index register
+        int IXL = indexRegister & 0xFF;
+        memory.write(stackPointer, (byte) IXL);
+        stackPointer = (stackPointer - 1) & 0xFFFF;
+
+        int IXH = (indexRegister >> 8) & 0xFF;
+        memory.write(stackPointer, (byte) IXH);
+        stackPointer = (stackPointer - 1) & 0xFFFF;
+
+        //push accumulators
+        memory.write(stackPointer, (byte) accumulatorA);
+        stackPointer = (stackPointer -1) & 0xFFFF;
+        //
+        memory.write(stackPointer, (byte) accumulatorB);
+        stackPointer = (stackPointer - 1) & 0xFFFF;
+
+        //push ccr
+        memory.write(stackPointer, (byte) ccr.getState());
+        stackPointer = (stackPointer - 1) & 0xFFFF;
     }
 
 }

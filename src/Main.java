@@ -2,17 +2,19 @@ public class Main {
     public static void main(String[] args){
         CPU c = new CPU();
         Loader l = new Loader(c, args[0]);
-        System.out.println("A" + c.accumulatorA);
-        c.step();
-        c.step();
-        c.step();
-        c.step();
-        c.step();
-        c.step();
-        c.step();
-        c.step();
-        c.step();
-        System.out.println("A" + c.accumulatorA);
+
+
+
+
+
+//        c.ccr.setState(0x33);
+//        System.out.println(c.ccr.toString());
+//        System.out.println(c.ccr.getState());
+//        c.ccr.setNegative(true);
+//        c.ccr.setOverflow(false);
+//        System.out.println(c.ccr.toString());
+//        System.out.println(c.ccr.getState());
+
 
 //        System.out.println("PC: " + c.programCounter);
 //        System.out.println("SP: " + c.stackPointer);
