@@ -14,14 +14,14 @@ public class MemoryManager {
         // 3 = ACIA
         if (address >= 0 && address <= 0x007F){
             return 0;
-        } else if (address >= 0XC000 && address <= 0xC3FF){
+        } else if (address >= 0xC000 && address <= 0xC3FF){
             return 1;
         } else if (address >= 0x4004 && address <= 0x4007){
             return 2;
         } else if (address >= 0x4008 && address <= 0x4009){
             return 3;
         }
-        // un-mappable!
+        // unmappable!
         return -1;
     }
 

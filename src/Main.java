@@ -2,11 +2,14 @@ public class Main {
     public static void main(String[] args){
         CPU c = new CPU();
         Loader l = new Loader(c, args[0]);
-
-
-
-
-
+        while(c.isRunning()){
+            c.step();
+            System.out.println("ACCA: " + c.accumulatorA);
+            System.out.println("ACCB: " + c.accumulatorB);
+            System.out.println("PC: " + c.programCounter);
+            System.out.println("SP: " + c.stackPointer);
+            System.out.println("IX: " + c.indexRegister);
+        }
 //        c.ccr.setState(0x33);
 //        System.out.println(c.ccr.toString());
 //        System.out.println(c.ccr.getState());

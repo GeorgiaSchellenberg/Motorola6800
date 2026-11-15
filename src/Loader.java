@@ -13,7 +13,6 @@ public class Loader {
             // read line by line
             while (sc.hasNext()) {
                 String line = sc.nextLine();
-                System.out.println(line);
 
                 // check each line for s1
                 if (line.charAt(1) == '1') {
@@ -27,15 +26,16 @@ public class Loader {
                     loadToRam(address, line.substring(8, line.length() -2));
 
                 } else if (line.charAt(1) == '9') {
-                    // set PC to location?
+                    System.out.println("here");
+                    int address = Integer.parseInt(line.substring(4, 8), 16);
+                    cpu.setProgramCounter(address);
+                    System.out.println("PC = " + address);
                 }
 
             }
         } catch (FileNotFoundException e) {
-            System.err.println("Could not find S19 file: " + s19);
+            System.out.println("Could not find S19 file: " + s19);
         }
-
-
     }
 
     private void loadToRam(int address, String line){

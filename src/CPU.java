@@ -9,6 +9,7 @@ public class CPU {
 
     ConditionCodeRegister ccr;
     MemoryManager memory;
+    boolean running;
 
     public CPU() {
         // initialize
@@ -17,11 +18,15 @@ public class CPU {
 
 
         this.indexRegister = 0;
-        this.stackPointer = 0;
+        this.stackPointer = 0x1FFF; // ?? i think it should start here?
         this.programCounter = 0;
 
         ccr = new ConditionCodeRegister();
         memory = new MemoryManager();
+        running = true;
+    }
+    public boolean isRunning(){
+        return running;
     }
 
     public void step(){
@@ -316,6 +321,10 @@ public class CPU {
             //:::::::::::::: Wait for Interrupt
             case 0x3E: WAI();break;
         }
+    }
+
+    public void setProgramCounter(int address){
+        programCounter = address;
     }
 
     private int getAddress(int addressingMode){
@@ -1391,6 +1400,8 @@ public class CPU {
         int pcl = memory.read(0xFFFB);
 
         programCounter = ((pch << 8) | pcl) & 0xFFFF;
+
+        running = false;
     }
     //Transfer from Accumulator A to Accumulator B
     public void TAB(){
@@ -1471,6 +1482,8 @@ public class CPU {
         //push ccr
         memory.write(stackPointer, (byte) ccr.getState());
         stackPointer = (stackPointer - 1) & 0xFFFF;
+
+        running = false;
     }
 
 }
